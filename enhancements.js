@@ -92,7 +92,7 @@ if(categoryHost&&folderGroups.length&&docSearch){
     visible+=[...group.querySelectorAll(".doc-item")].filter(item=>!item.hidden).length;
    }
   });
-  if(resultCount)resultCount.textContent=visible+" public documents";
+  if(resultCount)resultCount.textContent=visible+" public document"+(visible===1?"":"s");
   if(empty)empty.style.display=visible===0?"block":"none";
  }
  docSearch.addEventListener("input",applyCategory);
