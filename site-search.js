@@ -23,6 +23,7 @@ const kinds={page:"Page",document:"Public PDF",category:"Category",leader:"Publi
 const icons={page:"↗",document:"PDF",category:"▦",leader:"◈"};
 let index=null;
 let load=null;
+let indexState="idle";
 let lastOpener=null;
 
 function normalize(value){
@@ -84,6 +85,17 @@ function showResults(){
  const q=normalize(input.value);
  const terms=q.split(/\s+/).filter(Boolean);
  const all=index||initial;
+ const docsLink=dialog.querySelector("[data-t710-all-docs]");
+ if(docsLink)docsLink.href=q?"forms.html?q="+encodeURIComponent(input.value.trim()):"forms.html";
+ if(q && indexState==="loading" && !index){
+  if(status)status.textContent="Loading the public resource index…";
+  results.replaceChildren();
+  const loading=document.createElement("li");
+  loading.className="t710-search-dialog__empty";
+  loading.textContent="Loading public documents and directory entries…";
+  results.append(loading);
+  return;
+ }
  let matches;
  if(!q){
   matches=initial;
@@ -101,22 +113,24 @@ function showResults(){
  }else{
   const empty=document.createElement("li");
   empty.className="t710-search-dialog__empty";
-  empty.textContent="No matches in the public site index. Try another word, or visit the Forms & Documents page.";
+  empty.textContent=indexState==="error"?"The full search index could not load. Try the Forms & Documents page or the official troop portal.":"No matches in the public site index. Try another word, or visit the Forms & Documents page.";
   results.append(empty);
  }
- const docsLink=dialog.querySelector("[data-t710-all-docs]");
- if(docsLink)docsLink.href=q?"forms.html?q="+encodeURIComponent(input.value.trim()):"forms.html";
 }
 async function loadSearchIndex(){
  if(index)return index;
- if(!load)load=fetch("search-index.json?v=11",{cache:"force-cache"})
+ if(!load){
+  indexState="loading";
+  load=fetch("search-index.json?v=11",{cache:"force-cache"})
   .then(response=>{if(!response.ok)throw Error("Search index unavailable");return response.json()})
   .then(data=>{
    if(!Array.isArray(data.items))throw Error("Invalid search index");
    index=data.items.filter(x=>typeof x.title==="string"&&typeof x.url==="string");
+   indexState="ready";
    return index;
   })
-  .catch(()=>{load=null;return initial});
+  .catch(()=>{indexState="error";load=null;return initial});
+ }
  return load;
 }
 async function openSearch(opener){
@@ -126,8 +140,9 @@ async function openSearch(opener){
   input.focus();
   input.select();
  }
+ const loading=loadSearchIndex();
  showResults();
- await loadSearchIndex();
+ await loading;
  if(dialog.open)showResults();
 }
 function closeSearch(){
