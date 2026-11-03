@@ -153,3 +153,14 @@ A dedicated `toolkit.html` page provides three educational, interactive modules:
 The Toolkit appears in the shared header, page footer, Resources page and a featured homepage section. The public site-search index and sitemap also include the Toolkit. All interactions run in plain browser JavaScript without a database, external tracking, sign-in, or build system. Saved data is specific to the current browser/device and can be cleared by the browser's site-data controls.
 
 As with every public resource, current official Scouting and Troop 710 requirements should be confirmed with leaders. Do not include private youth/member rosters, completed health forms, or personal contact data in the public site.
+
+## Scroll-revealed homepage slideshow — November 2026
+
+The homepage has a modern four-slide photographic carousel immediately after the hero, replacing the previous static outdoor story section. It illustrates four broad Scouting themes: adventure, leadership, service, and growth.
+
+- The section fades into place when a visitor scrolls to it. The slideshow automatically advances at approximately 6.5-second intervals **only while sufficiently visible on screen** and while animations are enabled.
+- Users can pause or resume the slideshow, use arrow buttons or numbered progress indicators, navigate via Left/Right arrow keys while focusing the slideshow, or swipe left/right on touchscreens.
+- Automatic advancement pauses when the browser tab is hidden, the component is being hovered or focused, or the visitor chooses **No animations** in the Appearance preferences. The latter also removes transitions, while the manual controls remain available.
+- Carousel semantics, `aria-label`, `aria-hidden`, `inert`, and a manual-action-only live announcement support keyboard and screen-reader navigation. If JavaScript is unavailable, the first slide still appears.
+- The slideshow uses illustrative Unsplash outdoor photos. **They are not represented as actual Troop 710 events or members.** Only approved troop images should replace them.
+- Files: `showcase.css` (layout, themes, motion behavior) and `showcase.js` (scroll visibility, navigation, swipe, pause, and timing). The homepage links both with cache-busted versions.
