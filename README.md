@@ -130,3 +130,11 @@ New files:
 - The existing `enhancements.js` implements Saved filtering and bookmark controls without a library or build step.
 
 **Maintenance:** Verify public source documents regularly; the saved list and search index are conveniences, not authoritative updates. Before adding troop-event photographs, get approval from the people depicted and troop leadership.
+
+## Site consolidation and document sharing — November 2026
+
+The homepage content was reordered and shortened from nine major sections to seven. The role-based visitor guide now appears immediately after the introduction. Redundant quick-link and page-directory sections were removed; the primary navigation, role guide, search, footer, program features, mission story, and document previews remain. This improves information hierarchy without inventing troop facts.
+
+On **Forms & Documents**, each of the 48 public PDFs has a separate **Copy link** action next to the saved-document star. Copy uses the browser clipboard API, with a fallback for older browsers; a status message confirms the outcome. Links still target their original public sources, and nothing is uploaded to a server. The copy controls are keyboard focusable with descriptive labels. `enhancements.js` owns these interactions; `experience-v2.css` styles them, including a mobile layout.
+
+The site includes `sitemap.xml` for the five public pages and a website-only structured-data entry. It is intentionally identified as a separate public information site rather than falsely claiming control of the official troop portal.
