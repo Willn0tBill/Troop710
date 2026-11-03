@@ -177,6 +177,26 @@
   }
 }
 
+
+/* Once revealed, hover feedback remains available: the reveal transform
+   otherwise wins the cascade over existing card hover treatments. */
+@media (prefers-reduced-motion: no-preference) and (hover:hover) and (pointer:fine) {
+  html.motion-ready .home-value[data-reveal].is-visible:hover{
+    transform:translate3d(0,-6px,0);
+    transition-duration:.3s;
+  }
+  html.motion-ready .home-directory__card[data-reveal].is-visible:hover,
+  html.motion-ready .resource[data-reveal].is-visible:hover,
+  html.motion-ready .card[data-reveal].is-visible:hover{
+    transform:translate3d(0,-5px,0);
+    transition-duration:.3s;
+  }
+  html.motion-ready .person[data-reveal].is-visible:hover{
+    transform:translate3d(0,-3px,0);
+    transition-duration:.3s;
+  }
+}
+
 /* Respect accessibility preferences, including for users with JS. */
 @media (prefers-reduced-motion: reduce){
   html{scroll-behavior:auto!important}
