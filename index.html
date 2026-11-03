@@ -16,7 +16,7 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script>(function(){try{var t=localStorage.getItem("troop710-theme-preference");document.documentElement.dataset.theme=t==="dark"?"dark":"light";if(localStorage.getItem("troop710-motion-preference")!=="off")document.documentElement.classList.add("motion-enabled");}catch(e){document.documentElement.dataset.theme="light";document.documentElement.classList.add("motion-enabled");}})();</script><link rel="stylesheet" href="site-pages.css?v=6"><link rel="stylesheet" href="motion.css?v=6"><link rel="stylesheet" href="themes.css?v=7">
   <script src="site-pages.js?v=13" defer></script>
-<link rel="icon" type="image/svg+xml" href="favicon.svg"><link rel="stylesheet" href="enhancements.css?v=8"><link rel="stylesheet" href="site-search.css?v=11"></head>
+<link rel="icon" type="image/svg+xml" href="favicon.svg"><link rel="stylesheet" href="enhancements.css?v=8"><link rel="stylesheet" href="site-search.css?v=11"><link rel="stylesheet" href="experience-v2.css?v=14"></head>
 <body id="top">
 <a class="skip-link" href="#main">Skip to content</a>
 <header class="site-header">
@@ -76,9 +76,10 @@
         <h1 id="hero-title">Adventure<br>starts <span>here.</span></h1>
         <p class="home-hero__intro">Learn new skills. Discover new places. Lead with purpose. Troop 710 connects young people in Hacienda Heights with the confidence, friendships, and experiences that Scouting makes possible.</p>
         <div class="home-hero__actions">
-          <a href="about.html" class="action">Get to know our troop <span aria-hidden="true">↗</span></a>
+          <a href="#your-path" class="action">Find your next step <span aria-hidden="true">↗</span></a>
           <a href="forms.html" class="action action--secondary">Forms &amp; documents <span aria-hidden="true">↗</span></a>
         </div>
+        <div class="t710-hero-ledger" aria-label="Scouting opportunities"><span>Outdoor skills</span><span>Leadership</span><span>Service</span></div>
         <p class="home-hero__note"><svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 22s8-7 8-13a8 8 0 1 0-16 0c0 6 8 13 8 13Z"/><circle cx="12" cy="9" r="2.5"/></svg><span>Proudly based in <strong>Hacienda Heights, California</strong>.</span></p>
         <div class="home-hero__scroll" aria-hidden="true"><span>Scroll to explore</span><span class="home-hero__scroll-arrow">↓</span></div>
       </div>
@@ -87,6 +88,7 @@
           <img src="https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?auto=format&amp;fit=crop&amp;w=1200&amp;q=85" alt="Scenic mountain campsite with tents under the trees" width="1200" height="1400" fetchpriority="high" decoding="async">
           <div class="home-hero__photo-label">The outdoors is our classroom</div>
         </div>
+        <div class="t710-hero-chip" aria-hidden="true"><span class="t710-hero-chip__eyebrow">The Scouting experience</span><span class="t710-hero-chip__title">Go beyond what you know.</span><span class="t710-hero-chip__sub">Explore · Lead · Serve</span></div><span class="t710-hero-sideword" aria-hidden="true">Hacienda Heights</span>
         <div class="home-hero__stamp" aria-hidden="true"><b>710</b><small>Troop pride</small></div>
       </div>
     </div>
@@ -160,14 +162,58 @@
     </div>
   </section>
 
-<section class="home-section t710-guide" aria-labelledby="t710-guide-title"><div class="container t710-guide__grid">
- <div data-reveal="left"><div class="t710-guide__eyebrow">Your next step</div><h2 class="home-heading" id="t710-guide-title">Start here.<br>Go further.</h2><p class="t710-guide__lede">Whether you're exploring Scouting for the first time or looking for troop paperwork, the path forward should be simple.</p><a class="action" href="https://www.troopwebhost.org/Troop710HaciendaHeights/Index.htm" target="_blank" rel="noopener noreferrer">Explore Troop 710 ↗</a><div class="t710-guide__aside"><span class="t710-guide__aside-icon" aria-hidden="true">i</span><span><strong>Good to know:</strong> Exact meeting information and joining requirements are maintained by troop leadership on the official portal.</span></div></div>
- <div class="t710-guide__steps">
-   <div class="t710-guide__step" data-reveal><span class="t710-guide__number">01</span><div class="t710-guide__step-content"><h3>Get to know the troop</h3><p>Learn what Scouting offers and how youth leadership, outdoor experiences, and service fit together.</p><a href="about.html">Read about Troop 710 ↗</a></div></div>
-   <div class="t710-guide__step" data-reveal><span class="t710-guide__number">02</span><div class="t710-guide__step-content"><h3>Prepare with the right documents</h3><p>Browse troop bylaws, registration materials, advancement resources, and other publicly available forms.</p><a href="forms.html">Open the document library ↗</a></div></div>
-   <div class="t710-guide__step" data-reveal><span class="t710-guide__number">03</span><div class="t710-guide__step-content"><h3>Connect through official channels</h3><p>Use TroopWebHost to confirm current meeting details, learn about joining, and reach approved troop contacts.</p><a href="https://www.troopwebhost.org/Troop710HaciendaHeights/Index.htm" target="_blank" rel="noopener noreferrer">Official TroopWebHost ↗</a></div></div>
- </div>
-</div></section>
+<section class="home-section t710-path" id="your-path" aria-labelledby="t710-path-title">
+  <div class="container">
+    <div class="t710-path__top" data-reveal>
+      <div><div class="home-eyebrow">Built for wherever you are</div><h2 class="home-heading" id="t710-path-title">Your journey.<br>Your next step.</h2></div>
+      <p>Different people visit the troop website for different reasons. Choose the path that matches you to find the right public information in fewer clicks.</p>
+    </div>
+    <div class="t710-path__shell" data-reveal>
+      <div class="t710-path__side">
+        <h3 class="t710-path__side-title">Find your starting point.</h3>
+        <p class="t710-path__side-sub">Pick a role to see useful resources and what to do next.</p>
+        <div class="t710-path__tablist" role="tablist" aria-label="Choose your Scouting journey">
+          <button class="t710-path__tab" type="button" role="tab" id="t710-tab-discover" aria-controls="t710-panel-discover" aria-selected="true" tabindex="0" data-path="discover"><span class="t710-path__tab-index" aria-hidden="true">01</span><span>New to Troop 710</span></button>
+          <button class="t710-path__tab" type="button" role="tab" id="t710-tab-scout" aria-controls="t710-panel-scout" aria-selected="false" tabindex="-1" data-path="scout"><span class="t710-path__tab-index" aria-hidden="true">02</span><span>Current Scout</span></button>
+          <button class="t710-path__tab" type="button" role="tab" id="t710-tab-adult" aria-controls="t710-panel-adult" aria-selected="false" tabindex="-1" data-path="adult"><span class="t710-path__tab-index" aria-hidden="true">03</span><span>Parent or volunteer</span></button>
+        </div>
+        <div class="t710-path__side-foot">Useful public resources · No sign-in needed</div>
+      </div>
+      <div class="t710-path__content">
+        <div class="t710-path__panel" role="tabpanel" id="t710-panel-discover" aria-labelledby="t710-tab-discover" data-path-panel="discover" tabindex="0">
+          <span class="t710-path__panel-tag">Exploring the troop</span>
+          <h3>New experiences start with a question.</h3>
+          <p>Learn what Scouting offers, see the troop's public information, and use official channels to confirm meeting details and joining options.</p>
+          <div class="t710-path__choices">
+            <a class="t710-path__choice" href="about.html"><span class="t710-path__choice-icon" aria-hidden="true">01</span><span class="t710-path__choice-content"><span class="t710-path__choice-title">Get to know Troop 710</span><span class="t710-path__choice-desc">Adventure, leadership, service, and Scouting values</span></span><span class="t710-path__choice-arrow" aria-hidden="true">↗</span></a>
+            <a class="t710-path__choice" href="forms.html?category=registration"><span class="t710-path__choice-icon" aria-hidden="true">02</span><span class="t710-path__choice-content"><span class="t710-path__choice-title">Explore public registration forms</span><span class="t710-path__choice-desc">Review the available youth application materials</span></span><span class="t710-path__choice-arrow" aria-hidden="true">↗</span></a>
+            <a class="t710-path__choice" href="https://www.troopwebhost.org/Troop710HaciendaHeights/Index.htm" target="_blank" rel="noopener noreferrer"><span class="t710-path__choice-icon" aria-hidden="true">03</span><span class="t710-path__choice-content"><span class="t710-path__choice-title">Visit the official troop portal</span><span class="t710-path__choice-desc">Check current meeting and joining information</span></span><span class="t710-path__choice-arrow" aria-hidden="true">↗</span></a>
+          </div>
+        </div>
+        <div class="t710-path__panel" role="tabpanel" id="t710-panel-scout" aria-labelledby="t710-tab-scout" data-path-panel="scout" tabindex="0" hidden>
+          <span class="t710-path__panel-tag">Current members</span>
+          <h3>Find the next thing to work on.</h3>
+          <p>Use the troop's published forms and reference materials to prepare for leadership, advancement, and service projects. Confirm requirements with your leaders.</p>
+          <div class="t710-path__choices">
+            <a class="t710-path__choice" href="forms.html?category=leadership"><span class="t710-path__choice-icon" aria-hidden="true">01</span><span class="t710-path__choice-content"><span class="t710-path__choice-title">Youth leadership forms</span><span class="t710-path__choice-desc">Expectations and position completion materials</span></span><span class="t710-path__choice-arrow" aria-hidden="true">↗</span></a>
+            <a class="t710-path__choice" href="forms.html?category=review"><span class="t710-path__choice-icon" aria-hidden="true">02</span><span class="t710-path__choice-content"><span class="t710-path__choice-title">Board of Review resources</span><span class="t710-path__choice-desc">Publicly available advancement documents</span></span><span class="t710-path__choice-arrow" aria-hidden="true">↗</span></a>
+            <a class="t710-path__choice" href="forms.html?category=eagle"><span class="t710-path__choice-icon" aria-hidden="true">03</span><span class="t710-path__choice-content"><span class="t710-path__choice-title">Eagle project workbooks</span><span class="t710-path__choice-desc">Browse both published workbook versions</span></span><span class="t710-path__choice-arrow" aria-hidden="true">↗</span></a>
+          </div>
+        </div>
+        <div class="t710-path__panel" role="tabpanel" id="t710-panel-adult" aria-labelledby="t710-tab-adult" data-path-panel="adult" tabindex="0" hidden>
+          <span class="t710-path__panel-tag">Families and volunteers</span>
+          <h3>Support the journey.</h3>
+          <p>Find the public adult committee listing and administrative materials. For approved contact details or current responsibilities, check with authorized troop leadership.</p>
+          <div class="t710-path__choices">
+            <a class="t710-path__choice" href="leaders.html"><span class="t710-path__choice-icon" aria-hidden="true">01</span><span class="t710-path__choice-content"><span class="t710-path__choice-title">Meet adult committee members</span><span class="t710-path__choice-desc">Public directory of the troop's listed adults</span></span><span class="t710-path__choice-arrow" aria-hidden="true">↗</span></a>
+            <a class="t710-path__choice" href="forms.html?category=adult"><span class="t710-path__choice-icon" aria-hidden="true">02</span><span class="t710-path__choice-content"><span class="t710-path__choice-title">Adult administration forms</span><span class="t710-path__choice-desc">Public adult application and administrative resources</span></span><span class="t710-path__choice-arrow" aria-hidden="true">↗</span></a>
+            <a class="t710-path__choice" href="forms.html?category=volunteer"><span class="t710-path__choice-icon" aria-hidden="true">03</span><span class="t710-path__choice-content"><span class="t710-path__choice-title">Volunteer compliance documents</span><span class="t710-path__choice-desc">Review published screening materials</span></span><span class="t710-path__choice-arrow" aria-hidden="true">↗</span></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
   <section class="home-section home-docs" aria-labelledby="documents-title">
     <div class="container home-docs__grid">
@@ -204,5 +250,5 @@
  </div>
  <div class="t710-footer__bottom"><span>© <span data-year>2026</span> Troop 710 public information website. Independently maintained; not the official TroopWebHost portal.</span><span>Information and public file links are provided as a convenience. Verify current requirements with troop leadership.</span></div>
 </div></footer>
-<a class="t710-backtop" href="#top" id="t710-backtop" hidden aria-label="Back to top">↑ Back to top</a><script src="enhancements.js?v=13" defer></script><script src="site-search.js?v=13" defer></script></body>
+<a class="t710-backtop" href="#top" id="t710-backtop" hidden aria-label="Back to top">↑ Back to top</a><script src="enhancements.js?v=13" defer></script><script src="site-search.js?v=13" defer></script><script src="experience-v2.js?v=14" defer></script></body>
 </html>
