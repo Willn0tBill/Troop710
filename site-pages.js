@@ -59,19 +59,41 @@ if(search&&groups.length){
   filterDocuments();
 }
 
-/* OS reduced motion takes precedence by default, but a visitor who
-   explicitly clicks the preference button may opt in to animations.
-   The choice stays in this browser across pages. */
-const motionMedia=window.matchMedia("(prefers-reduced-motion: reduce)");
-const motionButton=document.querySelector("[data-motion-switch]");
-const motionText=motionButton?.querySelector(".motion-switch__label");
+/* Persistent appearance controls. Motion is ON by default.
+   "No animations" is an explicit choice, saved across pages. */
+const themeKey="troop710-theme-preference";
+const motionKey="troop710-motion-preference";
+function getPref(key){
+  try{return localStorage.getItem(key)}catch(_){return null}
+}
+function savePref(key,value){
+  try{localStorage.setItem(key,value)}catch(_){}
+}
+let theme=getPref(themeKey)==="dark"?"dark":"light";
+let enabled=getPref(motionKey)!=="off";
+
+const preferences=document.querySelector("[data-preferences]");
+const preferencesTrigger=preferences?.querySelector("[data-preferences-trigger]");
+const preferencesPanel=preferences?.querySelector("[data-preferences-panel]");
+const preferencesClose=preferences?.querySelector("[data-preferences-close]");
+const themeOptions=[...document.querySelectorAll("[data-theme-option]")];
+const motionOptions=[...document.querySelectorAll("[data-motion-option]")];
+
+function setTheme(next){
+  theme=next==="dark"?"dark":"light";
+  root.dataset.theme=theme;
+  themeOptions.forEach(button=>{
+    button.setAttribute("aria-pressed",String(button.dataset.themeOption===theme));
+  });
+}
+setTheme(theme);
+themeOptions.forEach(button=>button.addEventListener("click",()=>{
+  setTheme(button.dataset.themeOption);
+  savePref(themeKey,theme);
+}));
+
 const revealTargets=[...document.querySelectorAll("[data-reveal]")];
 let motionObserver=null;
-const prefKey="troop710-motion-preference";
-let saved=null;
-try{saved=localStorage.getItem(prefKey)}catch(_){}
-let enabled=saved==="on"||(saved!=="off"&&!motionMedia.matches);
-
 const gridSelector=".home-values,.home-directory__grid,.people-grid,.resource-grid,.grid-3,.grid-4";
 revealTargets.forEach(target=>{
   const grid=target.parentElement?.closest(gridSelector);
@@ -80,13 +102,11 @@ revealTargets.forEach(target=>{
     if(index>=0)target.style.setProperty("--reveal-delay",Math.min(index%4,3)*110+"ms");
   }
 });
-
-function setMotion(isEnabled){
-  enabled=isEnabled;
+function setMotion(next){
+  enabled=Boolean(next);
   root.classList.toggle("motion-enabled",enabled);
   root.classList.remove("motion-ready");
   if(motionObserver){motionObserver.disconnect();motionObserver=null;}
-
   if(enabled&&"IntersectionObserver" in window&&revealTargets.length){
     motionObserver=new IntersectionObserver(entries=>{
       entries.forEach(entry=>{
@@ -96,42 +116,40 @@ function setMotion(isEnabled){
         }
       });
     },{rootMargin:"0px 0px -32px 0px",threshold:.065});
-
     revealTargets.forEach(target=>target.classList.remove("is-visible"));
     root.classList.add("motion-ready");
     revealTargets.forEach(target=>motionObserver.observe(target));
   }else{
     revealTargets.forEach(target=>target.classList.add("is-visible"));
   }
-
-  if(motionButton){
-    motionButton.hidden=false;
-    motionButton.setAttribute("aria-pressed",String(enabled));
-    if(motionText)motionText.textContent=enabled?"Pause animations":"Enable animations";
-    motionButton.title=enabled
-      ?"Pause website animations"
-      :motionMedia.matches
-        ?"Your device prefers reduced motion. Click to enable animations for this website."
-        :"Enable website animations";
-  }
+  motionOptions.forEach(button=>{
+    button.setAttribute("aria-pressed",String((button.dataset.motionOption==="on")===enabled));
+  });
 }
-
 setMotion(enabled);
+motionOptions.forEach(button=>button.addEventListener("click",()=>{
+  const on=button.dataset.motionOption==="on";
+  setMotion(on);
+  savePref(motionKey,on?"on":"off");
+}));
 
-motionButton?.addEventListener("click",()=>{
-  const next=!enabled;
-  try{localStorage.setItem(prefKey,next?"on":"off")}catch(_){}
-  setMotion(next);
-});
-
-function onMediaChange(e){
-  let override=null;
-  try{override=localStorage.getItem(prefKey)}catch(_){}
-  if(override===null)setMotion(!e.matches);
+if(preferencesTrigger&&preferencesPanel){
+  function togglePanel(open,returnFocus=false){
+    preferencesPanel.hidden=!open;
+    preferencesTrigger.setAttribute("aria-expanded",String(open));
+    if(returnFocus)preferencesTrigger.focus();
+  }
+  preferencesTrigger.addEventListener("click",()=>{
+    togglePanel(preferencesPanel.hidden);
+  });
+  preferencesClose?.addEventListener("click",()=>togglePanel(false,true));
+  document.addEventListener("keydown",event=>{
+    if(event.key==="Escape"&&!preferencesPanel.hidden)togglePanel(false,true);
+  });
+  document.addEventListener("pointerdown",event=>{
+    if(!preferencesPanel.hidden&&!preferences.contains(event.target))togglePanel(false);
+  });
 }
-if(typeof motionMedia.addEventListener==="function")motionMedia.addEventListener("change",onMediaChange);
-else if(typeof motionMedia.addListener==="function")motionMedia.addListener(onMediaChange);
-
 /* Minimal work per scroll: only a CSS custom property changes. */
 const siteHeader=document.querySelector(".site-header");
 if(siteHeader){
