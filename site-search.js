@@ -121,7 +121,7 @@ async function loadSearchIndex(){
  if(index)return index;
  if(!load){
   indexState="loading";
-  load=fetch("search-index.json?v=11",{cache:"force-cache"})
+  load=fetch("search-index.json?v=20",{cache:"force-cache"})
   .then(response=>{if(!response.ok)throw Error("Search index unavailable");return response.json()})
   .then(data=>{
    if(!Array.isArray(data.items))throw Error("Invalid search index");
