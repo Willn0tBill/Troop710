@@ -239,7 +239,7 @@ html[data-theme="dark"] .t710-copy-doc{color:#c8ddc1}
  .home-section.home-docs{padding-top:68px}
  .t710-save-doc,.t710-copy-doc{width:32px;height:34px;padding:5px;border-radius:8px}
  .t710-copy-doc svg{width:15px;height:15px}
- .t710-copy-toast{bottom:16px;padding:11px 13px}
+ .t710-copy-toast{bottom:78px;padding:11px 13px}
  .home-join::after{inset:9px;border-radius:20px}
 }
 @media(prefers-reduced-motion:reduce){
