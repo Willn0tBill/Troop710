@@ -41,6 +41,55 @@ try{
 }catch(_){}
 const docItems=[...document.querySelectorAll(".doc-group .doc-item")];
 const docUrl=item=>item.querySelector('a[href]')?.getAttribute("href")||"";
+
+/* Share the original public URL without tracking or a third-party service. */
+if(docItems.length){
+ const status=document.createElement("div");
+ status.className="t710-copy-toast";
+ status.setAttribute("role","status");
+ status.setAttribute("aria-live","polite");
+ status.hidden=true;
+ document.body.appendChild(status);
+ let hideToast=null;
+ function notify(message){
+  status.textContent=message;
+  status.hidden=false;
+  if(hideToast)clearTimeout(hideToast);
+  hideToast=setTimeout(()=>{status.hidden=true},2700);
+ }
+ async function copyOriginal(url){
+  if(navigator.clipboard?.writeText){
+   try{await navigator.clipboard.writeText(url);return true}catch(_){}
+  }
+  const tmp=document.createElement("textarea");
+  tmp.value=url;
+  tmp.setAttribute("readonly","");
+  tmp.style.cssText="position:fixed;top:-1000px;left:-1000px";
+  document.body.appendChild(tmp);
+  tmp.select();
+  let success=false;
+  try{success=document.execCommand("copy")}catch(_){}
+  tmp.remove();
+  return success;
+ }
+ docItems.forEach(item=>{
+  const link=item.querySelector('a[href]');
+  if(!link||item.querySelector(".t710-copy-doc"))return;
+  const name=link.querySelector("span:nth-child(2)")?.textContent?.trim()||"document";
+  const button=document.createElement("button");
+  button.type="button";
+  button.className="t710-copy-doc";
+  button.setAttribute("aria-label","Copy link to "+name);
+  button.title="Copy public PDF link";
+  button.innerHTML='<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>';
+  button.addEventListener("click",async()=>{
+   const ok=await copyOriginal(link.href);
+   notify(ok?"Public document link copied.":"Could not copy automatically. You can copy the address from the opened document.");
+  });
+  item.appendChild(button);
+ });
+}
+
 const knownSavedCount=()=>docItems.filter(item=>savedUrls.has(docUrl(item))).length;
 function persistBookmarks(){
  try{localStorage.setItem(savedKey,JSON.stringify([...savedUrls]))}catch(_){}
