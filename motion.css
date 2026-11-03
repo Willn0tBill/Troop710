@@ -1,219 +1,304 @@
-/* Troop 710 — restrained interaction and motion layer.
-   Content is always visible without JavaScript or IntersectionObserver. */
+/* Troop 710 motion system v2
+   Honors OS reduced-motion preference by default.
+   The visitor can explicitly opt in using the floating Motion control.
+   Without JavaScript, every content block remains visible. */
 
 :root{
-  --ease-out: cubic-bezier(.19,1,.22,1);
-  --ease-soft: cubic-bezier(.22,.61,.36,1);
+  --ease-out:cubic-bezier(.19,1,.22,1);
+  --ease-soft:cubic-bezier(.22,.61,.36,1);
 }
 
-/* Subtle progress indicator under sticky header */
+/* Visible, accessible motion preference control */
+.motion-switch[hidden]{display:none!important}
+.motion-switch{
+  position:fixed;
+  right:22px;
+  bottom:22px;
+  z-index:90;
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  border:1px solid #c8d8c7;
+  border-radius:100px;
+  padding:11px 15px;
+  background:rgba(250,252,247,.97);
+  backdrop-filter:blur(16px);
+  color:#244d34;
+  font:800 12px/1.3 "DM Sans",Arial,sans-serif;
+  box-shadow:0 11px 38px rgba(13,53,26,.18);
+  cursor:pointer;
+  transition:transform .2s ease,box-shadow .2s ease,background .2s ease;
+}
+.motion-switch:hover,.motion-switch:focus-visible{
+  box-shadow:0 13px 43px rgba(13,53,26,.23);
+  background:#fff;
+}
+.motion-switch:focus-visible{
+  outline:3px solid #91ae62;
+  outline-offset:4px;
+}
+.motion-switch__dot{
+  width:10px;
+  height:10px;
+  flex:none;
+  border-radius:50%;
+  background:#adbbae;
+  box-shadow:0 0 0 4px #e9eee7;
+}
+.motion-switch[aria-pressed="true"] .motion-switch__dot{
+  background:#4c9b6a;
+  box-shadow:0 0 0 4px #e1f2df;
+}
+@media (max-width:650px){
+  .motion-switch{right:15px;bottom:15px;font-size:11px;padding:11px 13px}
+}
+
+/* Site progress indicator: stays visible in reduced-motion mode without animation */
 .site-header::after{
   content:"";
   position:absolute;
-  left:0;
   bottom:-1px;
+  left:0;
   width:var(--scroll-progress,0%);
-  height:2px;
-  background:#7f9f77;
+  height:3px;
+  z-index:5;
+  background:linear-gradient(90deg,#689874,#c1d878);
   pointer-events:none;
+}
+
+/* Static accents are visible on every device */
+.home-hero__scroll{
+  display:flex;
+  align-items:center;
+  gap:11px;
+  margin-top:18px;
+  font:800 10px/1.4 "DM Sans",Arial,sans-serif;
+  letter-spacing:.16em;
+  color:#658772;
+  text-transform:uppercase;
+}
+.home-hero__scroll .home-hero__scroll-arrow{
+  width:21px;height:21px;
+  display:grid;place-items:center;
+  color:#225239;
+  font-size:18px;
+}
+.home-hero__visual::before{
+  content:"";
+  position:absolute;
   z-index:2;
+  top:-25px;right:-8px;
+  width:152px;height:152px;
+  border:1px solid rgba(206,228,161,.7);
+  border-radius:50%;
+  pointer-events:none;
+  opacity:.55;
+}
+.doc-group summary{transition:background-color .2s ease}
+.doc-group summary::after{transition:transform .25s var(--ease-soft)}
+.doc-group[open] summary::after{transform:rotate(180deg)}
+
+/* All animation is opt-in by class, never simply assumed.
+   JS enables it automatically only if OS prefers no reduction. */
+html.motion-enabled{
+  scroll-behavior:smooth;
+}
+html.motion-enabled.motion-ready [data-reveal]{
+  opacity:0;
+  transform:translate3d(0,45px,0);
+  transition:opacity .95s var(--ease-soft),transform .95s var(--ease-out);
+  transition-delay:var(--reveal-delay,0ms);
+  will-change:transform,opacity;
+}
+html.motion-enabled.motion-ready [data-reveal="left"]{
+  transform:translate3d(-55px,15px,0);
+}
+html.motion-enabled.motion-ready [data-reveal="right"]{
+  transform:translate3d(55px,15px,0);
+}
+html.motion-enabled.motion-ready [data-reveal].is-visible{
+  opacity:1;transform:translate3d(0,0,0);
+  will-change:auto;
 }
 
-/* Subtle affordances do not depend on animation being enabled. */
-.action span[aria-hidden="true"],
-.home-directory__open,
-.home-docs__row>span:last-child{
-  display:inline-block;
+/* Meaningful visual entrance sequence on the homepage. */
+html.motion-enabled .home-hero__text .home-kicker{
+  animation:tl-rise .82s .02s var(--ease-out) both;
 }
-.doc-group summary{
-  transition:background-color .2s ease;
+html.motion-enabled .home-hero__text h1{
+  animation:tl-rise 1.1s .13s var(--ease-out) both;
 }
-.doc-group summary::after{
-  transition:transform .25s var(--ease-soft);
+html.motion-enabled .home-hero__intro{
+  animation:tl-rise 1.05s .27s var(--ease-out) both;
 }
-.doc-group[open] summary::after{
-  transform:rotate(180deg);
+html.motion-enabled .home-hero__actions{
+  animation:tl-rise .95s .42s var(--ease-out) both;
 }
-
-/* Reveal effects activate only when JS has initialized and the user
-   has not requested reduced motion. */
-@media (prefers-reduced-motion: no-preference) {
-  html.motion-ready [data-reveal]{
-    opacity:0;
-    transform:translate3d(0,26px,0);
-    transition:
-      opacity .8s var(--ease-soft),
-      transform .8s var(--ease-out);
-    transition-delay:var(--reveal-delay,0ms);
-    will-change:opacity,transform;
-  }
-  html.motion-ready [data-reveal="left"]{
-    transform:translate3d(-22px,12px,0);
-  }
-  html.motion-ready [data-reveal="right"]{
-    transform:translate3d(22px,12px,0);
-  }
-  html.motion-ready [data-reveal].is-visible{
-    opacity:1;
-    transform:translate3d(0,0,0);
-    will-change:auto;
-  }
-
-  /* The hero stays readable immediately and enters in a clear sequence. */
-  .home-hero__text .home-kicker{
-    animation:troop-slide-up .68s var(--ease-out) both;
-  }
-  .home-hero__text h1{
-    animation:troop-slide-up .85s .09s var(--ease-out) both;
-  }
-  .home-hero__intro{
-    animation:troop-slide-up .8s .2s var(--ease-out) both;
-  }
-  .home-hero__actions{
-    animation:troop-slide-up .75s .3s var(--ease-out) both;
-  }
-  .home-hero__note{
-    animation:troop-fade-in .9s .45s ease both;
-  }
-  .home-hero__visual{
-    animation:troop-image-in 1s .11s var(--ease-out) both;
-  }
-  .home-hero__stamp{
-    animation:troop-stamp-in .8s .58s var(--ease-out) both;
-  }
-  .page-hero .kicker,.page-hero h1,.page-hero .subtitle{
-    animation:troop-slide-up .75s var(--ease-out) both;
-  }
-  .page-hero h1{animation-delay:.08s}
-  .page-hero .subtitle{animation-delay:.16s}
-  .page-hero .crumb{animation:troop-fade-in .8s ease both}
-
-  @keyframes troop-slide-up{
-    from{opacity:0;transform:translate3d(0,23px,0)}
-    to{opacity:1;transform:translate3d(0,0,0)}
-  }
-  @keyframes troop-fade-in{
-    from{opacity:0}
-    to{opacity:1}
-  }
-  @keyframes troop-image-in{
-    from{opacity:0;transform:translate3d(0,22px,0) scale(.978)}
-    to{opacity:1;transform:translate3d(0,0,0) scale(1)}
-  }
-  @keyframes troop-stamp-in{
-    from{opacity:0;transform:translate3d(0,18px,0) rotate(-4deg) scale(.85)}
-    to{opacity:1;transform:translate3d(0,0,0) rotate(10deg) scale(1)}
-  }
-  @keyframes troop-menu-in{
-    from{opacity:0;transform:translate3d(0,-8px,0)}
-    to{opacity:1;transform:translate3d(0,0,0)}
-  }
-  @keyframes troop-folder-in{
-    from{opacity:0;transform:translateY(-7px)}
-    to{opacity:1;transform:translateY(0)}
-  }
-
-  /* Hover effects are limited to devices with an actual pointer. */
-  @media (hover:hover) and (pointer:fine) {
-    .action span[aria-hidden="true"],
-    .home-directory__open{
-      transition:transform .3s var(--ease-out);
-    }
-    .action:hover span[aria-hidden="true"],
-    .home-directory__card:hover .home-directory__open{
-      transform:translate(4px,-3px);
-    }
-    .home-value{
-      transition:transform .35s var(--ease-out),box-shadow .35s ease,border-color .35s ease;
-    }
-    .home-value:hover{
-      transform:translateY(-6px);
-      box-shadow:0 24px 55px rgba(21,54,37,.09);
-      border-color:#cedfcb;
-    }
-    .home-value__icon{
-      transition:transform .35s var(--ease-out),background-color .35s;
-    }
-    .home-value:hover .home-value__icon{
-      transform:rotate(-7deg) scale(1.08);
-      background:#e3efde;
-    }
-    .home-directory__card{
-      transition:transform .35s var(--ease-out),box-shadow .35s ease,border-color .35s ease;
-    }
-    .home-directory__card::after{
-      transition:transform .3s var(--ease-out);
-    }
-    .home-directory__card:hover::after{
-      transform:translate(4px,-4px);
-    }
-    .home-story__image img,
-    .home-hero__image img{
-      transition:transform 1.15s var(--ease-out);
-    }
-    .home-story__image:hover img,
-    .home-hero__image:hover img{
-      transform:scale(1.045);
-    }
-    .person,.resource,.card{
-      transition:transform .3s var(--ease-out),box-shadow .3s ease,border-color .3s ease;
-    }
-    .person:hover{
-      transform:translateY(-3px);
-    }
-    .resource:hover,.card:hover{
-      transform:translateY(-5px);
-    }
-  }
-
-  /* Mobile drawer and open document panels feel deliberate. */
-  @media(max-width:1020px){
-    .nav[data-open="true"]{
-      animation:troop-menu-in .28s var(--ease-out) both;
-    }
-  }
-  .doc-group[open] .doc-items{
-    animation:troop-folder-in .27s var(--ease-soft);
-  }
+html.motion-enabled .home-hero__note{
+  animation:tl-rise .9s .58s var(--ease-out) both;
+}
+html.motion-enabled .home-hero__scroll{
+  animation:tl-rise .8s .7s var(--ease-out) both;
+}
+html.motion-enabled .home-hero__visual{
+  animation:tl-image-in 1.25s .12s var(--ease-out) both;
+}
+html.motion-enabled .home-hero__stamp{
+  animation:tl-float-stamp 4.7s ease-in-out 1.25s infinite;
+}
+html.motion-enabled .home-hero__visual::before{
+  animation:tl-orbit 13s linear infinite;
+}
+html.motion-enabled .home-hero__scroll-arrow{
+  animation:tl-prompt 2.1s ease-in-out 1.3s infinite;
+}
+html.motion-enabled .home-hero__image img{
+  animation:tl-breath 18s ease-in-out 2s infinite alternate;
+}
+html.motion-enabled .home-hero h1 span{
+  background:linear-gradient(105deg,#638568 12%,#93b47a 38%,#38674e 66%,#638568 88%);
+  background-size:240% 100%;
+  color:transparent;
+  -webkit-background-clip:text;
+  background-clip:text;
+  animation:tl-accent-sweep 7s ease-in-out 1.2s infinite alternate;
 }
 
+/* Secondary page entrance */
+html.motion-enabled .page-hero .crumb{
+  animation:tl-rise .7s var(--ease-out) both;
+}
+html.motion-enabled .page-hero .kicker{
+  animation:tl-rise .8s .08s var(--ease-out) both;
+}
+html.motion-enabled .page-hero h1{
+  animation:tl-rise 1s .15s var(--ease-out) both;
+}
+html.motion-enabled .page-hero .subtitle{
+  animation:tl-rise .9s .3s var(--ease-out) both;
+}
 
-/* Once revealed, hover feedback remains available: the reveal transform
-   otherwise wins the cascade over existing card hover treatments. */
-@media (prefers-reduced-motion: no-preference) and (hover:hover) and (pointer:fine) {
-  html.motion-ready .home-value[data-reveal].is-visible:hover{
-    transform:translate3d(0,-6px,0);
-    transition-duration:.3s;
+@keyframes tl-rise{
+  from{opacity:0;transform:translate3d(0,36px,0)}
+  to{opacity:1;transform:translate3d(0,0,0)}
+}
+@keyframes tl-image-in{
+  from{opacity:0;transform:translate3d(38px,35px,0) scale(.935)}
+  to{opacity:1;transform:translate3d(0,0,0) scale(1)}
+}
+@keyframes tl-float-stamp{
+  0%,100%{transform:rotate(10deg) translate3d(0,0,0)}
+  50%{transform:rotate(7deg) translate3d(0,-12px,0)}
+}
+@keyframes tl-orbit{
+  from{transform:rotate(0deg) scale(1);opacity:.55}
+  50%{transform:rotate(180deg) scale(1.14);opacity:.85}
+  to{transform:rotate(360deg) scale(1);opacity:.55}
+}
+@keyframes tl-prompt{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(7px)}
+}
+@keyframes tl-breath{
+  from{transform:scale(1)}
+  to{transform:scale(1.1)}
+}
+@keyframes tl-accent-sweep{
+  from{background-position:0% center}
+  to{background-position:100% center}
+}
+@keyframes tl-menu{
+  from{opacity:0;transform:translate3d(0,-18px,0)}
+  to{opacity:1;transform:translate3d(0,0,0)}
+}
+@keyframes tl-fold{
+  from{opacity:0;transform:translateY(-14px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes tl-dot{
+  0%,100%{box-shadow:0 0 0 4px #e1f2df}
+  50%{box-shadow:0 0 0 8px rgba(166,210,160,.35)}
+}
+html.motion-enabled .motion-switch[aria-pressed="true"] .motion-switch__dot{
+  animation:tl-dot 2.8s ease-in-out infinite;
+}
+
+/* Cursor and hover treatments, without cursor-tracking scripts. */
+@media (hover:hover) and (pointer:fine){
+  html.motion-enabled .motion-switch:hover{
+    transform:translateY(-3px);
   }
-  html.motion-ready .home-directory__card[data-reveal].is-visible:hover,
-  html.motion-ready .resource[data-reveal].is-visible:hover,
-  html.motion-ready .card[data-reveal].is-visible:hover{
+  html.motion-enabled .home-value,
+  html.motion-enabled .home-directory__card,
+  html.motion-enabled .resource,
+  html.motion-enabled .card,
+  html.motion-enabled .person{
+    transition:transform .36s var(--ease-out),box-shadow .36s ease,border-color .36s ease;
+  }
+  html.motion-enabled.motion-ready .home-value[data-reveal].is-visible:hover{
+    transform:translate3d(0,-9px,0);
+  }
+  html.motion-enabled.motion-ready .home-directory__card[data-reveal].is-visible:hover,
+  html.motion-enabled.motion-ready .resource[data-reveal].is-visible:hover,
+  html.motion-enabled.motion-ready .card[data-reveal].is-visible:hover{
+    transform:translate3d(0,-9px,0);
+  }
+  html.motion-enabled.motion-ready .person[data-reveal].is-visible:hover{
     transform:translate3d(0,-5px,0);
-    transition-duration:.3s;
   }
-  html.motion-ready .person[data-reveal].is-visible:hover{
-    transform:translate3d(0,-3px,0);
-    transition-duration:.3s;
+  html.motion-enabled .home-value__icon{
+    transition:transform .36s var(--ease-out),background-color .36s ease;
+  }
+  html.motion-enabled .home-value:hover .home-value__icon{
+    transform:rotate(-8deg) scale(1.12);
+    background:#dcebda;
+  }
+  html.motion-enabled .home-directory__card::after{
+    transition:transform .36s var(--ease-out);
+  }
+  html.motion-enabled .home-directory__card:hover::after{
+    transform:translate3d(6px,-6px,0);
+  }
+  html.motion-enabled .action span[aria-hidden="true"],
+  html.motion-enabled .home-directory__open{
+    display:inline-block;
+    transition:transform .32s var(--ease-out);
+  }
+  html.motion-enabled .action:hover span[aria-hidden="true"],
+  html.motion-enabled .home-directory__card:hover .home-directory__open{
+    transform:translate3d(5px,-3px,0);
+  }
+  html.motion-enabled .home-story__image img{
+    transition:transform 1.2s var(--ease-out);
+  }
+  html.motion-enabled .home-story__image:hover img{
+    transform:scale(1.065);
   }
 }
+@media(max-width:1020px){
+  html.motion-enabled .nav[data-open="true"]{
+    animation:tl-menu .4s var(--ease-out) both;
+  }
+}
+html.motion-enabled .doc-group[open] .doc-items{
+  animation:tl-fold .36s var(--ease-soft) both;
+}
 
-/* Respect accessibility preferences, including for users with JS. */
-@media (prefers-reduced-motion: reduce){
-  html{scroll-behavior:auto!important}
-  html.motion-ready [data-reveal]{
-    opacity:1!important;
-    transform:none!important;
-    transition:none!important;
-  }
-  .home-hero__text *, .home-hero__visual,
-  .home-hero__stamp,.page-hero *,
-  .nav,.doc-items{
-    animation:none!important;
-  }
-  .site-header::after,
-  .doc-group summary::after,
-  .action span[aria-hidden="true"],
-  .home-directory__open{
-    transition:none!important;
-  }
+/* On narrow screens, motion never shifts or stretches the page itself. */
+@media(max-width:650px){
+  .home-hero__visual::before{width:88px;height:88px;top:-13px;right:0}
+}
+
+/* If motion is not explicitly enabled, honor the system preference and
+   never conceal the page or animate its content. */
+html:not(.motion-enabled) [data-reveal]{
+  opacity:1!important;
+  transform:none!important;
+}
+html:not(.motion-enabled) .home-hero__text *,
+html:not(.motion-enabled) .home-hero__visual,
+html:not(.motion-enabled) .home-hero__image img,
+html:not(.motion-enabled) .home-hero__stamp,
+html:not(.motion-enabled) .page-hero *{
+  animation:none!important;
 }
