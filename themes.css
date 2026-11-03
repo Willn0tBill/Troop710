@@ -266,3 +266,14 @@ html.motion-enabled .notice,
 html.motion-enabled .preferences-panel{
   transition:background-color .28s ease,color .28s ease,border-color .28s ease;
 }
+
+
+/* Keep reveal movement inside the viewport on phones and tablets. */
+@media(max-width:820px){
+  html.motion-enabled.motion-ready [data-reveal="left"],
+  html.motion-enabled.motion-ready [data-reveal="right"]{
+    transform:translate3d(0,26px,0);
+  }
+}
+/* Clip any transient offscreen keyframe pixels without trapping page scroll. */
+html.motion-enabled body{overflow-x:clip}
