@@ -93,7 +93,7 @@ function showResults(){
    .filter(x=>x.score>=0)
    .sort((a,b)=>b.score-a.score||a.item.title.localeCompare(b.item.title))
    .map(x=>x.item);
-  if(status)status.textContent=matches.length+" results found"+(matches.length>12?" · showing first 12":"");
+  if(status)status.textContent=matches.length+(matches.length===1?" result":" results")+" found"+(matches.length>12?" · showing first 12":"");
  }
  results.replaceChildren();
  if(matches.length){
