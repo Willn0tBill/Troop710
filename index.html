@@ -14,8 +14,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://images.unsplash.com">
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="site-pages.css?v=5"><link rel="stylesheet" href="motion.css?v=5">
-  <script src="site-pages.js?v=5" defer></script>
+  <script>(function(){try{var t=localStorage.getItem("troop710-theme-preference");document.documentElement.dataset.theme=t==="dark"?"dark":"light";if(localStorage.getItem("troop710-motion-preference")!=="off")document.documentElement.classList.add("motion-enabled");}catch(e){document.documentElement.dataset.theme="light";document.documentElement.classList.add("motion-enabled");}})();</script><link rel="stylesheet" href="site-pages.css?v=6"><link rel="stylesheet" href="motion.css?v=6"><link rel="stylesheet" href="themes.css?v=6">
+  <script src="site-pages.js?v=6" defer></script>
 <link rel="icon" type="image/svg+xml" href="favicon.svg"></head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -33,7 +33,35 @@
     </nav>
   </div>
 </header>
-<button class="motion-switch" type="button" data-motion-switch hidden aria-pressed="false" title="Website animation preference"><span class="motion-switch__dot" aria-hidden="true"></span><span class="motion-switch__label">Enable animations</span></button>
+<div class="site-preferences" data-preferences>
+  <button class="preferences-trigger" type="button" data-preferences-trigger aria-expanded="false" aria-controls="site-preferences-panel" aria-label="Open appearance settings">
+    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="2.5" fill="currentColor" stroke="none"/><circle cx="16" cy="17" r="2.5" fill="currentColor" stroke="none"/></svg>
+    <span>Appearance</span>
+    <svg class="pref-chevron" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg>
+  </button>
+  <div class="preferences-panel" id="site-preferences-panel" data-preferences-panel hidden aria-label="Website appearance preferences">
+    <div class="preferences-heading">
+      <div><h2 class="preferences-title">Appearance</h2><p class="preferences-caption">Make the site feel right for you.</p></div>
+      <button class="preferences-close" type="button" data-preferences-close aria-label="Close appearance settings">×</button>
+    </div>
+    <div class="preferences-block">
+      <span class="preferences-label">Color theme</span>
+      <div class="preferences-options" role="group" aria-label="Color theme">
+        <button type="button" class="preferences-option" data-theme-option="light" aria-pressed="true"><span aria-hidden="true">☀</span> Light</button>
+        <button type="button" class="preferences-option" data-theme-option="dark" aria-pressed="false"><span aria-hidden="true">☾</span> Dark</button>
+      </div>
+    </div>
+    <div class="preferences-block">
+      <span class="preferences-label">Animations</span>
+      <div class="preferences-options" role="group" aria-label="Animation preference">
+        <button type="button" class="preferences-option" data-motion-option="on" aria-pressed="true"><span aria-hidden="true">✦</span> On</button>
+        <button type="button" class="preferences-option" data-motion-option="off" aria-pressed="false">No animations</button>
+      </div>
+      <p class="preferences-note">Animations are on by default. You can turn them off at any time.</p>
+    </div>
+    <p class="preferences-saved">Your selections are remembered on this device.</p>
+  </div>
+</div>
 <main id="main">
   <section class="home-hero" aria-labelledby="hero-title">
     <div class="container home-hero__grid">
