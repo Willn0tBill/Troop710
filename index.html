@@ -14,8 +14,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://images.unsplash.com">
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="site-pages.css"><link rel="stylesheet" href="motion.css">
-  <script src="site-pages.js" defer></script>
+  <link rel="stylesheet" href="site-pages.css?v=5"><link rel="stylesheet" href="motion.css?v=5">
+  <script src="site-pages.js?v=5" defer></script>
 <link rel="icon" type="image/svg+xml" href="favicon.svg"></head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -33,6 +33,7 @@
     </nav>
   </div>
 </header>
+<button class="motion-switch" type="button" data-motion-switch hidden aria-pressed="false" title="Website animation preference"><span class="motion-switch__dot" aria-hidden="true"></span><span class="motion-switch__label">Enable animations</span></button>
 <main id="main">
   <section class="home-hero" aria-labelledby="hero-title">
     <div class="container home-hero__grid">
@@ -45,6 +46,7 @@
           <a href="forms.html" class="action action--secondary">Forms &amp; documents <span aria-hidden="true">↗</span></a>
         </div>
         <p class="home-hero__note"><svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 22s8-7 8-13a8 8 0 1 0-16 0c0 6 8 13 8 13Z"/><circle cx="12" cy="9" r="2.5"/></svg><span>Proudly based in <strong>Hacienda Heights, California</strong>.</span></p>
+        <div class="home-hero__scroll" aria-hidden="true"><span>Scroll to explore</span><span class="home-hero__scroll-arrow">↓</span></div>
       </div>
       <div class="home-hero__visual">
         <div class="home-hero__image">
