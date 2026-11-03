@@ -143,6 +143,15 @@ openButtons.forEach(button=>{
 closeButton?.addEventListener("click",closeSearch);
 dialog.addEventListener("click",event=>{if(event.target===dialog)closeSearch();});
 dialog.addEventListener("close",()=>{if(lastOpener?.isConnected)lastOpener.focus();});
+// A native search input consumes Escape to clear its text in some browsers.
+// Capture Escape before the input does so it reliably closes the dialog.
+dialog.addEventListener("keydown",event=>{
+ if(event.key==="Escape"){
+  event.preventDefault();
+  event.stopPropagation();
+  closeSearch();
+ }
+},true);
 input.addEventListener("input",showResults);
 input.addEventListener("keydown",event=>{
  if(event.key==="ArrowDown"){
