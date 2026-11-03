@@ -1,0 +1,199 @@
+/* Troop 710 — restrained interaction and motion layer.
+   Content is always visible without JavaScript or IntersectionObserver. */
+
+:root{
+  --ease-out: cubic-bezier(.19,1,.22,1);
+  --ease-soft: cubic-bezier(.22,.61,.36,1);
+}
+
+/* Subtle progress indicator under sticky header */
+.site-header::after{
+  content:"";
+  position:absolute;
+  left:0;
+  bottom:-1px;
+  width:var(--scroll-progress,0%);
+  height:2px;
+  background:#7f9f77;
+  pointer-events:none;
+  z-index:2;
+}
+
+/* Subtle affordances do not depend on animation being enabled. */
+.action span[aria-hidden="true"],
+.home-directory__open,
+.home-docs__row>span:last-child{
+  display:inline-block;
+}
+.doc-group summary{
+  transition:background-color .2s ease;
+}
+.doc-group summary::after{
+  transition:transform .25s var(--ease-soft);
+}
+.doc-group[open] summary::after{
+  transform:rotate(180deg);
+}
+
+/* Reveal effects activate only when JS has initialized and the user
+   has not requested reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+  html.motion-ready [data-reveal]{
+    opacity:0;
+    transform:translate3d(0,26px,0);
+    transition:
+      opacity .8s var(--ease-soft),
+      transform .8s var(--ease-out);
+    transition-delay:var(--reveal-delay,0ms);
+    will-change:opacity,transform;
+  }
+  html.motion-ready [data-reveal="left"]{
+    transform:translate3d(-22px,12px,0);
+  }
+  html.motion-ready [data-reveal="right"]{
+    transform:translate3d(22px,12px,0);
+  }
+  html.motion-ready [data-reveal].is-visible{
+    opacity:1;
+    transform:translate3d(0,0,0);
+    will-change:auto;
+  }
+
+  /* The hero stays readable immediately and enters in a clear sequence. */
+  .home-hero__text .home-kicker{
+    animation:troop-slide-up .68s var(--ease-out) both;
+  }
+  .home-hero__text h1{
+    animation:troop-slide-up .85s .09s var(--ease-out) both;
+  }
+  .home-hero__intro{
+    animation:troop-slide-up .8s .2s var(--ease-out) both;
+  }
+  .home-hero__actions{
+    animation:troop-slide-up .75s .3s var(--ease-out) both;
+  }
+  .home-hero__note{
+    animation:troop-fade-in .9s .45s ease both;
+  }
+  .home-hero__visual{
+    animation:troop-image-in 1s .11s var(--ease-out) both;
+  }
+  .home-hero__stamp{
+    animation:troop-stamp-in .8s .58s var(--ease-out) both;
+  }
+  .page-hero .kicker,.page-hero h1,.page-hero .subtitle{
+    animation:troop-slide-up .75s var(--ease-out) both;
+  }
+  .page-hero h1{animation-delay:.08s}
+  .page-hero .subtitle{animation-delay:.16s}
+  .page-hero .crumb{animation:troop-fade-in .8s ease both}
+
+  @keyframes troop-slide-up{
+    from{opacity:0;transform:translate3d(0,23px,0)}
+    to{opacity:1;transform:translate3d(0,0,0)}
+  }
+  @keyframes troop-fade-in{
+    from{opacity:0}
+    to{opacity:1}
+  }
+  @keyframes troop-image-in{
+    from{opacity:0;transform:translate3d(0,22px,0) scale(.978)}
+    to{opacity:1;transform:translate3d(0,0,0) scale(1)}
+  }
+  @keyframes troop-stamp-in{
+    from{opacity:0;transform:translate3d(0,18px,0) rotate(-4deg) scale(.85)}
+    to{opacity:1;transform:translate3d(0,0,0) rotate(10deg) scale(1)}
+  }
+  @keyframes troop-menu-in{
+    from{opacity:0;transform:translate3d(0,-8px,0)}
+    to{opacity:1;transform:translate3d(0,0,0)}
+  }
+  @keyframes troop-folder-in{
+    from{opacity:0;transform:translateY(-7px)}
+    to{opacity:1;transform:translateY(0)}
+  }
+
+  /* Hover effects are limited to devices with an actual pointer. */
+  @media (hover:hover) and (pointer:fine) {
+    .action span[aria-hidden="true"],
+    .home-directory__open{
+      transition:transform .3s var(--ease-out);
+    }
+    .action:hover span[aria-hidden="true"],
+    .home-directory__card:hover .home-directory__open{
+      transform:translate(4px,-3px);
+    }
+    .home-value{
+      transition:transform .35s var(--ease-out),box-shadow .35s ease,border-color .35s ease;
+    }
+    .home-value:hover{
+      transform:translateY(-6px);
+      box-shadow:0 24px 55px rgba(21,54,37,.09);
+      border-color:#cedfcb;
+    }
+    .home-value__icon{
+      transition:transform .35s var(--ease-out),background-color .35s;
+    }
+    .home-value:hover .home-value__icon{
+      transform:rotate(-7deg) scale(1.08);
+      background:#e3efde;
+    }
+    .home-directory__card{
+      transition:transform .35s var(--ease-out),box-shadow .35s ease,border-color .35s ease;
+    }
+    .home-directory__card::after{
+      transition:transform .3s var(--ease-out);
+    }
+    .home-directory__card:hover::after{
+      transform:translate(4px,-4px);
+    }
+    .home-story__image img,
+    .home-hero__image img{
+      transition:transform 1.15s var(--ease-out);
+    }
+    .home-story__image:hover img,
+    .home-hero__image:hover img{
+      transform:scale(1.045);
+    }
+    .person,.resource,.card{
+      transition:transform .3s var(--ease-out),box-shadow .3s ease,border-color .3s ease;
+    }
+    .person:hover{
+      transform:translateY(-3px);
+    }
+    .resource:hover,.card:hover{
+      transform:translateY(-5px);
+    }
+  }
+
+  /* Mobile drawer and open document panels feel deliberate. */
+  @media(max-width:1020px){
+    .nav[data-open="true"]{
+      animation:troop-menu-in .28s var(--ease-out) both;
+    }
+  }
+  .doc-group[open] .doc-items{
+    animation:troop-folder-in .27s var(--ease-soft);
+  }
+}
+
+/* Respect accessibility preferences, including for users with JS. */
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto!important}
+  html.motion-ready [data-reveal]{
+    opacity:1!important;
+    transform:none!important;
+    transition:none!important;
+  }
+  .home-hero__text *, .home-hero__visual,
+  .home-hero__stamp,.page-hero *,
+  .nav,.doc-items{
+    animation:none!important;
+  }
+  .site-header::after,
+  .doc-group summary::after,
+  .action span[aria-hidden="true"],
+  .home-directory__open{
+    transition:none!important;
+  }
+}
