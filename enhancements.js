@@ -109,6 +109,11 @@ if(categoryHost&&folderGroups.length&&docSearch){
   const button=categoryHost.querySelector('[data-category-button="'+incoming+'"]');
   if(button)button.click();
  }
+ const incomingQuery=new URLSearchParams(location.search).get("q");
+ if(incomingQuery){
+  docSearch.value=incomingQuery.slice(0,150);
+  docSearch.dispatchEvent(new Event("input",{bubbles:true}));
+ }
  applyCategory();
 }
 
