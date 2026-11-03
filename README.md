@@ -23,9 +23,9 @@ The site is committed, but GitHub Pages must be enabled separately in GitHub set
 
 ## Verified public information
 
-The public [TroopWebHost directory](https://www.troopwebhost.org/) lists **Troop 710 — Hacienda Heights, California**.
+The troop’s public TroopWebHost homepage is [Troop 710 of Hacienda Heights, CA](https://www.troopwebhost.org/Troop710HaciendaHeights/Index.htm). This is the canonical official troop portal linked throughout the website.
 
-Meeting time, meeting address, specific troop calendar, names of leaders, contact addresses, dues, and current events **have not been verified**. The site deliberately avoids inventing them. Until a troop-controlled direct TroopWebHost page is confirmed, links go to the public directory.
+Meeting time, meeting address, specific troop calendar, names of leaders, contact addresses, dues, and current events **have not been verified**. The site deliberately avoids inventing them. All member portal, calendar, joining, and resource links on this site now go directly to the troop’s official TroopWebHost page. Some information may require member sign-in.
 
 ## Images and permissions
 
@@ -35,10 +35,9 @@ An authorized adult troop leader should review public site copy, branding, regis
 
 ## Editing
 
-All page code (HTML, CSS, and a tiny mobile-menu script) is contained in **index.html**. Update the copy directly there. For verified troop contact details, meeting times, and a direct TroopWebHost link, search for "https://www.troopwebhost.org/" in that file and replace the relevant links.
+All page code (HTML, CSS, and a tiny mobile-menu script) is contained in **index.html**. Update the copy directly there. For verified troop contact details, meeting times, and a direct TroopWebHost link, search for the official TroopWebHost link in that file and update the appropriate navigation or call-to-action.
 
 ### Future upgrades
-- Direct approved TroopWebHost link
 - Authorized logo, photographs, and verified meeting information
 - Adult-managed inquiry contact
 - Troop-controlled news and event updates
