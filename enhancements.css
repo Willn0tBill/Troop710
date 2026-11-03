@@ -116,3 +116,12 @@ html[data-theme="dark"] .t710-filter-button[aria-pressed="true"]{border-color:#d
 @media(prefers-reduced-motion:reduce){
   html:not(.motion-enabled) .t710-quicklink,html:not(.motion-enabled) .t710-backtop{transition:none!important}
 }
+
+/* Filtering must hide grid/flex cards even when author styles set display. */
+.people-grid .person[hidden],.doc-group[hidden],.doc-item[hidden]{display:none!important}
+/* Preserve accessible headings and readable status at narrow widths. */
+.t710-guide__step-content,.t710-quicklink__copy{min-width:0}
+@media (max-width:540px){
+ .t710-guide__step h3{font-size:18px}
+ .t710-quicklink strong{font-size:14px}
+}
