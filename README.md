@@ -116,3 +116,17 @@ The Search control is available in the global header on every page, with an addi
 Search suggestions include Eagle projects, leadership, merit badges, and registration. Keyboard arrow keys navigate results; Escape closes the dialog. The source index is stored in `search-index.json` and loaded directly from GitHub Pages. Search queries are processed locally in the visitor's browser and are not sent to an analytics or search service. When adding or removing public documents, update both `forms.html` and `search-index.json` so results stay accurate.
 
 The Forms page also accepts `?q=search-term` deep links from the global finder, and `?category=eagle` style deep links. Public titles may have minor spelling corrections; source PDF links are unchanged. No member-only or restricted materials are indexed.
+
+## Visitor journey and saved documents — November 2026
+
+The homepage now has a substantial **Choose Your Path** experience for prospective families, current Scouts, and parents/volunteers. Each tab provides practical, verified next steps and links to the official troop portal or the relevant public forms category. The choice is remembered in the current browser. Tab controls support Arrow keys and Home/End, with native tab-panel semantics. The homepage also has a more distinctive field-guide-inspired hero treatment and mobile styling.
+
+The **Forms & Documents** page now lets visitors star public documents for reuse. The `★ Saved` category filters the existing 48-document list to locally saved items. Bookmarks are saved in the browser's local storage under `troop710-saved-documents`, are never sent to a server, and are not synced between devices. A user can remove any bookmark with the same star button. The original public PDF URLs and nine source categories remain unchanged. The About page includes four concise FAQs about meeting information, public documents, leaders, and saved forms.
+
+New files:
+
+- `experience-v2.css`: Hero polish, responsive role selector, bookmarks, and FAQ styling in light/dark modes.
+- `experience-v2.js`: Keyboard-accessible visitor role tabs with a locally remembered selection.
+- The existing `enhancements.js` implements Saved filtering and bookmark controls without a library or build step.
+
+**Maintenance:** Verify public source documents regularly; the saved list and search index are conveniences, not authoritative updates. Before adding troop-event photographs, get approval from the people depicted and troop leadership.
