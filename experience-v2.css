@@ -177,3 +177,71 @@ html[data-theme="dark"] .t710-saved-filter[aria-pressed="true"]{background:#e4d9
 .t710-faq__item p a{color:#477e4e;text-decoration:underline;text-underline-offset:3px;font-weight:800}
 html[data-theme="dark"] .t710-faq__item p a{color:#c8e6a9}
 @media(max-width:700px){.t710-faq__head{display:block}.t710-faq__head p{margin-top:18px;max-width:620px}.t710-faq__item summary{padding:17px;font-size:13px}.t710-faq__item p{padding:0 17px 18px}}
+
+
+/* Refined single-path homepage: better rhythm, less visual repetition. */
+.home-hero{padding-bottom:102px}
+.home-hero__text h1{letter-spacing:-.085em;text-wrap:balance}
+.home-hero__intro{max-width:565px}
+.t710-path{padding-top:92px;padding-bottom:98px}
+.t710-path__top{margin-bottom:33px}
+.t710-path__panel h3{text-wrap:balance}
+.home-section#experience{padding-top:99px;padding-bottom:102px}
+.home-story{padding-top:95px;padding-bottom:100px}
+.t710-search-banner{padding:85px 0 45px}
+.home-section.home-docs{padding-top:70px}
+.home-join{position:relative;isolation:isolate}
+.home-join::after{
+ content:"";position:absolute;inset:15px;z-index:-1;pointer-events:none;
+ border:1px solid rgba(218,236,187,.22);border-radius:28px;
+}
+html[data-theme="dark"] .t710-path{background:#15251b!important}
+html[data-theme="dark"] .home-hero__intro{color:#bed0be}
+.t710-path__shell{box-shadow:0 24px 66px rgba(15,52,31,.09)}
+html[data-theme="dark"] .t710-path__shell{box-shadow:0 24px 70px rgba(0,0,0,.17)}
+
+/* Public-document toolbar: star and copy links are distinct, reachable actions. */
+.doc-item{gap:5px}
+.doc-item a{flex:1;min-width:0}
+.doc-item a span:nth-child(2){overflow-wrap:anywhere}
+.t710-copy-doc{
+ flex:none;display:grid;place-items:center;
+ width:36px;height:36px;padding:6px;
+ border:1px solid var(--v2-line);border-radius:10px;
+ background:var(--v2-surface);color:#607d68;cursor:pointer;
+ transition:transform .18s ease,background-color .18s ease,border-color .18s ease;
+}
+.t710-copy-doc svg{width:17px;height:17px}
+.t710-copy-doc:hover{transform:translateY(-2px);border-color:#9abc93;background:var(--v2-bg)}
+.t710-copy-doc:focus-visible{outline:3px solid #91bb87;outline-offset:3px}
+html[data-theme="dark"] .t710-copy-doc{color:#c8ddc1}
+.t710-copy-toast[hidden]{display:none!important}
+.t710-copy-toast{
+ position:fixed;z-index:180;left:50%;bottom:26px;transform:translateX(-50%);
+ width:max-content;max-width:calc(100vw - 34px);
+ border:1px solid rgba(200,230,196,.4);background:#143927;color:#f5f9ed;
+ box-shadow:0 14px 42px rgba(0,0,0,.23);border-radius:14px;padding:13px 19px;
+ font:800 12px/1.5 "DM Sans",Arial,sans-serif;text-align:center;
+ pointer-events:none;
+}
+@media(max-width:900px){
+ .home-hero{padding-bottom:70px}
+ .t710-path{padding-top:72px;padding-bottom:78px}
+ .home-section#experience{padding-top:75px;padding-bottom:77px}
+ .home-story{padding-top:77px;padding-bottom:86px}
+ .t710-search-banner{padding-top:64px;padding-bottom:26px}
+ .home-section.home-docs{padding-top:72px}
+}
+@media(max-width:540px){
+ .home-hero{padding-bottom:55px}
+ .t710-path{padding-top:65px;padding-bottom:72px}
+ .t710-search-banner{padding-top:55px;padding-bottom:0}
+ .home-section.home-docs{padding-top:68px}
+ .t710-save-doc,.t710-copy-doc{width:32px;height:34px;padding:5px;border-radius:8px}
+ .t710-copy-doc svg{width:15px;height:15px}
+ .t710-copy-toast{bottom:16px;padding:11px 13px}
+ .home-join::after{inset:9px;border-radius:20px}
+}
+@media(prefers-reduced-motion:reduce){
+ html:not(.motion-enabled) .t710-copy-doc{transition:none!important}
+}
