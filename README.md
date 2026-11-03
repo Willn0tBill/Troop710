@@ -104,3 +104,15 @@ The site's source remains plain HTML, CSS and JavaScript without a build process
 ### Check and maintain
 
 The public site is hosted using GitHub Pages, so code changes can take time to propagate. Verify actual live pages, preferably on mobile and desktop, after each update. The documents and public leadership roster are a *snapshot*, not a live synchronized feed. Review these against the official TroopWebHost site before publishing new facts or claiming them as current.
+
+## Site-wide resource finder — November 2026
+
+The Search control is available in the global header on every page, with an additional prominent search panel on the homepage. Visitors can open it with **Ctrl+K** (or **⌘K**) and search the site's publicly indexed content:
+
+- Five public website pages and a direct link to the official troop portal.
+- The **48** original public PDF document URLs, grouped by source directory.
+- **19** publicly listed committee members and all nine document category links.
+
+Search suggestions include Eagle projects, leadership, merit badges, and registration. Keyboard arrow keys navigate results; Escape closes the dialog. The source index is stored in `search-index.json` and loaded directly from GitHub Pages. Search queries are processed locally in the visitor's browser and are not sent to an analytics or search service. When adding or removing public documents, update both `forms.html` and `search-index.json` so results stay accurate.
+
+The Forms page also accepts `?q=search-term` deep links from the global finder, and `?category=eagle` style deep links. Public titles may have minor spelling corrections; source PDF links are unchanged. No member-only or restricted materials are indexed.
