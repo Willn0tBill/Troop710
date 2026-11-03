@@ -15,6 +15,9 @@ A modern, mobile-friendly public information website for **Troop 710 of Hacienda
 | `forms.html` | Forms & Documents | Searchable collection of 48 public PDF links in 9 categories |
 | `resources.html` | Resource Links | Curated official troop and Scouting America links |
 | `site-pages.css` | Shared page styles | Consistent typography, colors, layout, and mobile design for subpages |
+| `toolkit.html` | Interactive Toolkit | Guided resource finder, sample packing checklist and outdoor-readiness quiz |
+| `toolkit.css` | Toolkit styles | Responsive light/dark interface and printable checklist |
+| `toolkit.js` | Toolkit interactions | On-device checklist, quiz scoring, resource guide |
 | `site-pages.js` | Shared interactions | Mobile navigation, document search, and saved appearance settings |
 | `motion.css` | Motion layer | Entrance and scroll animations |
 | `themes.css` | Appearance | Light and dark palettes; preferences panel |
@@ -138,3 +141,15 @@ The homepage content was reordered and shortened from nine major sections to sev
 On **Forms & Documents**, each of the 48 public PDFs has a separate **Copy link** action next to the saved-document star. Copy uses the browser clipboard API, with a fallback for older browsers; a status message confirms the outcome. Links still target their original public sources, and nothing is uploaded to a server. The copy controls are keyboard focusable with descriptive labels. `enhancements.js` owns these interactions; `experience-v2.css` styles them, including a mobile layout.
 
 The site includes `sitemap.xml` for the five public pages and a website-only structured-data entry. It is intentionally identified as a separate public information site rather than falsely claiming control of the official troop portal.
+
+## Interactive Toolkit — November 2026
+
+A dedicated `toolkit.html` page provides three educational, interactive modules:
+
+- **Trip packing checklist:** two sample modes (day outing and overnight), checkable lists, personal custom items, a progress indicator, reset, and a print view. Items and checked state are saved locally in the visitor's browser only under `t710-toolkit-pack-v1`. The list is an example, **not** the troop's authoritative equipment list or outing policy.
+- **Outdoor-readiness quiz:** five simple, non-graphic educational questions covering trip planning, staying with a group, wildlife, leaving sites clean, and asking a responsible adult for guidance. Each answer has explanatory feedback. Results are not Scout rank credit or official achievement records.
+- **Guided public resource finder:** visitors choose whether they're new, a Scout, or a parent/volunteer, then select a goal and receive direct links to the site's verified public pages, categories, or official TroopWebHost portal. No submission or identifying details are collected.
+
+The Toolkit appears in the shared header, page footer, Resources page and a featured homepage section. The public site-search index and sitemap also include the Toolkit. All interactions run in plain browser JavaScript without a database, external tracking, sign-in, or build system. Saved data is specific to the current browser/device and can be cleared by the browser's site-data controls.
+
+As with every public resource, current official Scouting and Troop 710 requirements should be confirmed with leaders. Do not include private youth/member rosters, completed health forms, or personal contact data in the public site.
