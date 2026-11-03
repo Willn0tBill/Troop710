@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://images.unsplash.com">
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="site-pages.css">
+  <link rel="stylesheet" href="site-pages.css"><link rel="stylesheet" href="motion.css">
   <script src="site-pages.js" defer></script>
 <link rel="icon" type="image/svg+xml" href="favicon.svg"></head>
 <body>
@@ -58,22 +58,22 @@
 
   <section class="home-section" id="experience" aria-labelledby="experience-title">
     <div class="container">
-      <div class="home-headline-row">
+      <div class="home-headline-row" data-reveal>
         <div><div class="home-eyebrow">More than an adventure</div><h2 class="home-heading" id="experience-title">Growing tomorrow's<br>leaders, today.</h2></div>
         <p class="home-lede">Scouting brings young people together to learn by doing: taking initiative, helping others, and gaining the confidence to try something new.</p>
       </div>
       <div class="home-values">
-        <article class="home-value">
+        <article class="home-value" data-reveal>
           <div class="home-value__top"><span class="home-value__icon"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="m15.4 8.5-2.1 4.8-4.8 2.1 2.1-4.8 4.8-2.1Z"/></svg></span><span class="home-value__number">01 / EXPLORE</span></div>
           <h3>Outdoor adventure</h3>
           <p>Build practical skills, learn preparedness, and see what is possible beyond the familiar.</p>
         </article>
-        <article class="home-value">
+        <article class="home-value" data-reveal>
           <div class="home-value__top"><span class="home-value__icon"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="9" cy="8" r="3"/><path d="M3 20v-2.5a6 6 0 0 1 12 0V20H3Zm14-13a3 3 0 0 1 0 6m1 2a5 5 0 0 1 3 4.7V20h-3"/></svg></span><span class="home-value__number">02 / LEAD</span></div>
           <h3>Youth leadership</h3>
           <p>Work as a team, plan together, and develop the responsibility that comes with leading others.</p>
         </article>
-        <article class="home-value">
+        <article class="home-value" data-reveal>
           <div class="home-value__top"><span class="home-value__icon"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.4 8.7 8 11 4.6-2.3 8-6 8-11V5l-8-3Z"/><path d="m8.5 12 2.5 2.5 4.8-5"/></svg></span><span class="home-value__number">03 / SERVE</span></div>
           <h3>Community service</h3>
           <p>Put Scouting values into action by contributing to projects that make a difference.</p>
@@ -84,11 +84,11 @@
 
   <section class="home-story" aria-labelledby="story-title">
     <div class="container home-story__grid">
-      <div class="home-story__image">
+      <div class="home-story__image" data-reveal="left">
         <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&amp;fit=crop&amp;w=1100&amp;q=85" alt="A green mountainous landscape beneath an open sky" width="1100" height="1000">
         <div class="home-story__number" aria-hidden="true">710</div>
       </div>
-      <div>
+      <div data-reveal="right">
         <div class="home-eyebrow">Who we are</div>
         <h2 class="home-heading" id="story-title">A place to belong.<br>A chance to grow.</h2>
         <p class="home-lede">Troop 710 is a Scouting community serving Hacienda Heights. Our public resources include troop guidelines, youth leadership expectations, registration materials, and advancement documents.</p>
@@ -104,15 +104,15 @@
 
   <section class="home-section home-directory" id="explore" aria-labelledby="explore-title">
     <div class="container">
-      <div class="home-headline-row">
+      <div class="home-headline-row" data-reveal>
         <div><div class="home-eyebrow">Explore Troop 710</div><h2 class="home-heading" id="explore-title">Find what you need.</h2></div>
         <p class="home-lede">Everything in its place. Quick access to the people, documents, and information that keep the troop connected.</p>
       </div>
       <div class="home-directory__grid">
-        <a href="about.html" class="home-directory__card"><span class="home-directory__tag">01 / The troop</span><h3>About Our Troop</h3><p>Discover Scouting's approach to adventure, leadership, and service in Hacienda Heights.</p><span class="home-directory__open">Learn more ↗</span></a>
-        <a href="leaders.html" class="home-directory__card"><span class="home-directory__tag">02 / The community</span><h3>Adult Leaders</h3><p>Find the committee members listed in the troop's public directory.</p><span class="home-directory__open">View leaders ↗</span></a>
-        <a href="forms.html" class="home-directory__card"><span class="home-directory__tag">03 / Document library</span><h3>Forms &amp; Documents</h3><p>Search public registration, advancement, leadership, and other troop forms.</p><span class="home-directory__open">Browse documents ↗</span></a>
-        <a href="resources.html" class="home-directory__card"><span class="home-directory__tag">04 / Helpful links</span><h3>Resource Links</h3><p>Find the troop portal and a curated collection of trusted Scouting resources.</p><span class="home-directory__open">Explore resources ↗</span></a>
+        <a href="about.html" class="home-directory__card" data-reveal><span class="home-directory__tag">01 / The troop</span><h3>About Our Troop</h3><p>Discover Scouting's approach to adventure, leadership, and service in Hacienda Heights.</p><span class="home-directory__open">Learn more ↗</span></a>
+        <a href="leaders.html" class="home-directory__card" data-reveal><span class="home-directory__tag">02 / The community</span><h3>Adult Leaders</h3><p>Find the committee members listed in the troop's public directory.</p><span class="home-directory__open">View leaders ↗</span></a>
+        <a href="forms.html" class="home-directory__card" data-reveal><span class="home-directory__tag">03 / Document library</span><h3>Forms &amp; Documents</h3><p>Search public registration, advancement, leadership, and other troop forms.</p><span class="home-directory__open">Browse documents ↗</span></a>
+        <a href="resources.html" class="home-directory__card" data-reveal><span class="home-directory__tag">04 / Helpful links</span><h3>Resource Links</h3><p>Find the troop portal and a curated collection of trusted Scouting resources.</p><span class="home-directory__open">Explore resources ↗</span></a>
       </div>
     </div>
   </section>
@@ -126,7 +126,7 @@
         <p class="home-lede">Documents link to their original public sources on TroopWebHost. Confirm the most current forms with adult leadership before use.</p>
         <div style="margin-top:28px"><a class="action" href="forms.html">Open the document library <span aria-hidden="true">↗</span></a></div>
       </div>
-      <div class="home-docs__panel" aria-label="Document categories preview">
+      <div data-reveal="right" class="home-docs__panel" aria-label="Document categories preview">
         <div class="home-docs__panel-heading"><strong>Explore by category</strong><span>Public resources</span></div>
         <a class="home-docs__row" href="forms.html"><span><svg aria-hidden="true" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1Z"/><path d="M14 2v6h5M8 13h8M8 17h8"/></svg></span><div><strong>Membership &amp; registration</strong><small>Applications, registration checklist, troop fees</small></div><span aria-hidden="true">↗</span></a>
         <a class="home-docs__row" href="forms.html"><span><svg aria-hidden="true" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1Z"/><path d="M14 2v6h5M8 13h8M8 17h8"/></svg></span><div><strong>Youth leadership</strong><small>Position expectations and completion forms</small></div><span aria-hidden="true">↗</span></a>
@@ -137,7 +137,7 @@
   </section>
 
   <section class="home-join" id="join" aria-labelledby="join-title">
-    <div class="container home-join__inner">
+    <div class="container home-join__inner" data-reveal>
       <div><div class="home-eyebrow">The next chapter begins here</div><h2 class="home-heading" id="join-title">Ready to discover<br>what's next?</h2><p class="home-lede">For the current meeting details, joining information, and official troop updates, visit Troop 710's TroopWebHost portal.</p></div>
       <a class="action" href="https://www.troopwebhost.org/Troop710HaciendaHeights/Index.htm" target="_blank" rel="noopener noreferrer">Visit the official troop portal <span aria-hidden="true">↗</span></a>
     </div>
