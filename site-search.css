@@ -163,3 +163,18 @@ html[data-theme="dark"] .t710-search-dialog__footer kbd{border-color:#4c6b51}
  html:not(.motion-enabled) .t710-search-dialog__result,
  html:not(.motion-enabled) .t710-header-search{transition:none!important}
 }
+
+/* Scroll entrances must never move side-to-side outside tablet widths. */
+@media(max-width:1280px){
+  html.motion-enabled.motion-ready [data-reveal="left"],
+  html.motion-enabled.motion-ready [data-reveal="right"]{
+    transform:translate3d(0,28px,0);
+  }
+  html.motion-enabled .home-hero__visual{
+    animation-name:tl-hero-mobile;
+  }
+}
+@keyframes tl-hero-mobile{
+  from{opacity:0;transform:translate3d(0,32px,0) scale(.96)}
+  to{opacity:1;transform:translate3d(0,0,0) scale(1)}
+}
