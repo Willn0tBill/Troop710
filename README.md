@@ -3,7 +3,7 @@
 A modern, mobile-friendly public information website for **Troop 710 of Hacienda Heights, California**.
 
 **Official troop management portal:** https://www.troopwebhost.org/Troop710HaciendaHeights/Index.htm  
-**Public GitHub Pages URL (once Pages is enabled):** https://willn0tbill.github.io/Troop710/
+**Live GitHub Pages website:** https://willn0tbill.github.io/Troop710/
 
 ## Website structure
 
@@ -15,7 +15,11 @@ A modern, mobile-friendly public information website for **Troop 710 of Hacienda
 | `forms.html` | Forms & Documents | Searchable collection of 48 public PDF links in 9 categories |
 | `resources.html` | Resource Links | Curated official troop and Scouting America links |
 | `site-pages.css` | Shared page styles | Consistent typography, colors, layout, and mobile design for subpages |
-| `site-pages.js` | Shared interactions | Mobile navigation and document search |
+| `site-pages.js` | Shared interactions | Mobile navigation, document search, and saved appearance settings |
+| `motion.css` | Motion layer | Entrance and scroll animations |
+| `themes.css` | Appearance | Light and dark palettes; preferences panel |
+| `enhancements.css` | UI polish | Quick links, onboarding, filters, responsive footer |
+| `enhancements.js` | Utility interactions | Leader search, document filters, expand/collapse, back to top |
 
 No build tools, package installs, database, API keys, or third-party JavaScript frameworks are required.
 
@@ -85,3 +89,18 @@ The public website now uses a consistent, responsive design across all pages:
 - Explicit separation between verified troop facts, curated external links, and illustrative photography.
 
 The site's source remains plain HTML, CSS and JavaScript without a build process. The HTML is valid for GitHub Pages branch deployment. Do not treat the repo as authorized to change TroopWebHost's own content.
+
+## Usability upgrade — November 2026
+
+- Home page now includes direct links for new families, current members, and volunteers, plus a three-step "start here" guide.
+- About page resource cards link to searchable document categories instead of being decorative.
+- Adult Leaders page has a client-side search across the 19 publicly listed committee members; no names are sent to a server.
+- Forms & Documents offers quick category chips, keyword search, live result counts, and expand/collapse-all controls. URLs like `forms.html?category=eagle` and `forms.html?category=leadership` open relevant categories directly.
+- Redesigned responsive footer provides obvious direct access to official troop information and public resources.
+- Back-to-top shortcut appears on longer pages; it respects the user's no-animation setting.
+- The existing Appearance menu retains Light/Dark and Animations On/No animations choices across pages.
+- The upgrade preserves the original public PDF URLs rather than copying their documents.
+
+### Check and maintain
+
+The public site is hosted using GitHub Pages, so code changes can take time to propagate. Verify actual live pages, preferably on mobile and desktop, after each update. The documents and public leadership roster are a *snapshot*, not a live synchronized feed. Review these against the official TroopWebHost site before publishing new facts or claiming them as current.
