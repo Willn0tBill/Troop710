@@ -259,3 +259,11 @@ a,button,input{ -webkit-tap-highlight-color:transparent }
  .home-join .home-heading{font-size:clamp(2.6rem,10vw,4rem)}
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+
+/* Final detail polish */
+.page-hero h1 em{font-style:normal;color:var(--lime)}
+.home-docs__row:hover strong{color:#2a6946}
+.home-docs__row:hover>span:last-child{transform:translate(2px,-2px)}
+.home-docs__row>span:last-child{transition:transform .2s}
+.doc-item a:focus-visible,.resource:focus-visible,.home-directory__card:focus-visible{outline:3px solid #84a769;outline-offset:3px}
+@media(prefers-reduced-motion:reduce){.home-docs__row>span:last-child{transition:none}}
