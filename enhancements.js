@@ -32,8 +32,37 @@ if(leaderInput){
 const categoryHost=document.getElementById("t710-category-filters");
 const docSearch=document.getElementById("doc-search");
 const folderGroups=[...document.querySelectorAll(".doc-group")];
+/* Personal document bookmarks remain in the visitor's browser only. */
+const savedKey="troop710-saved-documents";
+let savedUrls=new Set();
+try{
+ const raw=JSON.parse(localStorage.getItem(savedKey)||"[]");
+ if(Array.isArray(raw))savedUrls=new Set(raw.filter(u=>typeof u==="string"));
+}catch(_){}
+const docItems=[...document.querySelectorAll(".doc-group .doc-item")];
+const docUrl=item=>item.querySelector('a[href]')?.getAttribute("href")||"";
+const knownSavedCount=()=>docItems.filter(item=>savedUrls.has(docUrl(item))).length;
+function persistBookmarks(){
+ try{localStorage.setItem(savedKey,JSON.stringify([...savedUrls]))}catch(_){}
+}
+function syncBookmarkButtons(){
+ docItems.forEach(item=>{
+  const b=item.querySelector(".t710-save-doc");
+  if(!b)return;
+  const saved=savedUrls.has(docUrl(item));
+  const name=item.querySelector("a span:nth-child(2)")?.textContent?.trim()||"document";
+  b.setAttribute("aria-pressed",String(saved));
+  b.setAttribute("aria-label",(saved?"Remove saved document: ":"Save document: ")+name);
+  b.title=saved?"Remove saved document":"Save this document on this device";
+  b.textContent=saved?"★":"☆";
+ });
+ const filter=categoryHost?.querySelector('[data-category-button="saved"]');
+ if(filter)filter.textContent="★ Saved · "+knownSavedCount();
+}
+
 const categories=[
  ["all","All documents"],
+ ["saved","★ Saved"],
  ["general","General"],
  ["volunteer","Volunteer requirements"],
  ["adult","Adult registration"],
@@ -62,13 +91,30 @@ if(categoryHost&&folderGroups.length&&docSearch){
   const title=group.querySelector("summary")?.textContent||"";
   group.dataset.category=folderPatterns.find(([,re])=>re.test(title))?.[0]||"general";
  });
+ docItems.forEach(item=>{
+  if(item.querySelector(".t710-save-doc"))return;
+  const b=document.createElement("button");
+  b.type="button";
+  b.className="t710-save-doc";
+  b.addEventListener("click",()=>{
+   const u=docUrl(item);
+   if(!u)return;
+   if(savedUrls.has(u))savedUrls.delete(u);else savedUrls.add(u);
+   persistBookmarks();
+   syncBookmarkButtons();
+   if(activeCategory==="saved")docSearch.dispatchEvent(new Event("input",{bubbles:true}));
+  });
+  item.appendChild(b);
+ });
+
  categories.forEach(([slug,label])=>{
-  const count=slug==="all"?folderGroups.reduce((n,g)=>n+g.querySelectorAll(".doc-item").length,0)
+  const count=slug==="all"?docItems.length:slug==="saved"?knownSavedCount()
    :folderGroups.filter(g=>g.dataset.category===slug).reduce((n,g)=>n+g.querySelectorAll(".doc-item").length,0);
-  if(!count)return;
+  if(!count&&slug!=="saved")return;
   const button=document.createElement("button");
   button.type="button";
   button.className="t710-filter-button";
+  if(slug==="saved")button.classList.add("t710-saved-filter");
   button.dataset.categoryButton=slug;
   button.setAttribute("aria-pressed",String(slug===activeCategory));
   button.textContent=label+" · "+count;
@@ -79,6 +125,7 @@ if(categoryHost&&folderGroups.length&&docSearch){
   });
   categoryHost.appendChild(button);
  });
+ syncBookmarkButtons();
  categoryHost.hidden=false;
 
  const resultCount=document.getElementById("doc-count");
@@ -86,14 +133,32 @@ if(categoryHost&&folderGroups.length&&docSearch){
  function applyCategory(){
   let visible=0;
   folderGroups.forEach(group=>{
-   const matchCategory=activeCategory==="all"||group.dataset.category===activeCategory;
-   if(!matchCategory)group.hidden=true;
-   if(!group.hidden){
-    visible+=[...group.querySelectorAll(".doc-item")].filter(item=>!item.hidden).length;
+   if(activeCategory==="saved"){
+    const matching=[...group.querySelectorAll(".doc-item")];
+    matching.forEach(item=>{
+     if(!savedUrls.has(docUrl(item)))item.hidden=true;
+    });
+    const count=matching.filter(item=>!item.hidden).length;
+    group.hidden=count===0;
+    if(count>0)group.open=true;
+    visible+=count;
+   }else{
+    const matchesCategory=activeCategory==="all"||group.dataset.category===activeCategory;
+    if(!matchesCategory)group.hidden=true;
+    if(!group.hidden){
+     visible+=[...group.querySelectorAll(".doc-item")].filter(item=>!item.hidden).length;
+    }
    }
   });
   if(resultCount)resultCount.textContent=visible+" public document"+(visible===1?"":"s");
-  if(empty)empty.style.display=visible===0?"block":"none";
+  if(empty){
+   empty.textContent=activeCategory==="saved"
+    ?knownSavedCount()===0
+     ?"You haven't saved any documents yet. Select ☆ beside a file to keep it here."
+     :"No saved documents matched your search. Try a different phrase."
+    :"No documents matched your search. Try a different phrase.";
+   empty.style.display=visible===0?"block":"none";
+  }
  }
  docSearch.addEventListener("input",applyCategory);
 
