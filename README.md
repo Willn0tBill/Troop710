@@ -72,3 +72,16 @@ A code commit alone does not guarantee GitHub Pages is live.
 Edit `index.html` to change the home page, the four subpage HTML files to update the public sections, and `site-pages.css` for shared subpage appearance. The document links are embedded in `forms.html` and search is implemented in `site-pages.js`.
 
 All externally hosted photos on the home page are illustrative stock landscapes, not photos of Troop 710 events.
+
+## Design refresh — November 2026
+
+The public website now uses a consistent, responsive design across all pages:
+
+- Redesigned home page featuring a Scouting-focused hero, clear program overview, quick navigation to public troop information, and a simple joining pathway.
+- Shared forest-green, ivory and sage design system with refined typography, consistent cards and buttons, improved spacing, and a matching SVG favicon.
+- Consistent sticky navigation on all pages with accessible mobile toggle, Escape-key handling, and keyboard-visible focus states.
+- Improved public document search behavior and screen-reader status updates; all 48 linked PDFs and nine organized categories remain available.
+- Branded `404.html` page for unavailable routes.
+- Explicit separation between verified troop facts, curated external links, and illustrative photography.
+
+The site's source remains plain HTML, CSS and JavaScript without a build process. The HTML is valid for GitHub Pages branch deployment. Do not treat the repo as authorized to change TroopWebHost's own content.
