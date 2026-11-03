@@ -109,7 +109,7 @@ function showResults(){
 }
 async function loadSearchIndex(){
  if(index)return index;
- if(!load)load=fetch("search-index.json?v=9",{cache:"force-cache"})
+ if(!load)load=fetch("search-index.json?v=11",{cache:"force-cache"})
   .then(response=>{if(!response.ok)throw Error("Search index unavailable");return response.json()})
   .then(data=>{
    if(!Array.isArray(data.items))throw Error("Invalid search index");
