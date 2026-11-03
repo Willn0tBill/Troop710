@@ -52,7 +52,7 @@ if(search&&groups.length){
       else if(!query)group.open=expanded[index];
       visible+=groupVisible;
     });
-    if(resultCount)resultCount.textContent=(query?visible:total)+" public documents";
+    if(resultCount){const n=query?visible:total;resultCount.textContent=n+" public document"+(n===1?"":"s");}
     if(emptyMessage)emptyMessage.style.display=query&&visible===0?"block":"none";
   }
   search.addEventListener("input",filterDocuments);
