@@ -160,3 +160,20 @@ html[data-theme="dark"] .t710-saved-filter[aria-pressed="true"]{background:#e4d9
 .t710-saved-empty[hidden]{display:none!important}
 @media(max-width:520px){.doc-item{gap:2px}.t710-save-doc{height:34px;width:34px;font-size:19px}.t710-doc-save-help{padding:11px 13px}}
 @media(prefers-reduced-motion:reduce){html:not(.motion-enabled) .t710-path__tab,html:not(.motion-enabled) .t710-path__choice,html:not(.motion-enabled) .t710-save-doc{transition:none!important}}
+
+
+/* Purpose-built FAQ to make public troop information easy to navigate */
+.t710-faq__head{display:flex;justify-content:space-between;align-items:end;gap:40px;margin-bottom:29px}
+.t710-faq__head p{color:var(--v2-muted);max-width:370px;line-height:1.8;font-size:13px;margin:0}
+.t710-faq__list{display:grid;gap:10px}
+.t710-faq__item{border:1px solid var(--v2-line);border-radius:16px;background:var(--v2-surface);color:var(--v2-ink);overflow:hidden}
+.t710-faq__item summary{padding:20px 23px;display:flex;gap:15px;align-items:center;justify-content:space-between;list-style:none;cursor:pointer;font:800 14px/1.5 Manrope,sans-serif;letter-spacing:-.02em}
+.t710-faq__item summary::-webkit-details-marker{display:none}
+.t710-faq__item summary::after{content:"+";font:400 25px/1 "DM Sans",Arial,sans-serif;color:#608968;flex:none}
+.t710-faq__item[open] summary::after{content:"−"}
+.t710-faq__item summary:hover{background:var(--v2-bg)}
+.t710-faq__item summary:focus-visible{outline:3px solid #a0c18c;outline-offset:-3px;border-radius:12px}
+.t710-faq__item p{font-size:13px;line-height:1.9;color:var(--v2-muted);padding:0 23px 22px;margin:0;max-width:760px}
+.t710-faq__item p a{color:#477e4e;text-decoration:underline;text-underline-offset:3px;font-weight:800}
+html[data-theme="dark"] .t710-faq__item p a{color:#c8e6a9}
+@media(max-width:700px){.t710-faq__head{display:block}.t710-faq__head p{margin-top:18px;max-width:620px}.t710-faq__item summary{padding:17px;font-size:13px}.t710-faq__item p{padding:0 17px 18px}}
