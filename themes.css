@@ -238,3 +238,31 @@ html[data-theme="dark"] .preferences-close{background:#344b39;color:#e5f2de}
     transition:none!important;
   }
 }
+
+/* The No animations selection disables motion across all components,
+   not only the scroll-reveal effect. */
+html:not(.motion-enabled),html:not(.motion-enabled) body{scroll-behavior:auto!important}
+html:not(.motion-enabled) *,
+html:not(.motion-enabled) *::before,
+html:not(.motion-enabled) *::after{
+  animation:none!important;
+  transition:none!important;
+  scroll-behavior:auto!important;
+}
+/* Smoothly blend surfaces only when animations are enabled. */
+html.motion-enabled body,
+html.motion-enabled .site-header,
+html.motion-enabled .home-hero,
+html.motion-enabled .home-story,
+html.motion-enabled .home-section,
+html.motion-enabled .home-value,
+html.motion-enabled .home-directory__card,
+html.motion-enabled .home-docs__panel,
+html.motion-enabled .card,
+html.motion-enabled .person,
+html.motion-enabled .resource,
+html.motion-enabled .doc-group,
+html.motion-enabled .notice,
+html.motion-enabled .preferences-panel{
+  transition:background-color .28s ease,color .28s ease,border-color .28s ease;
+}
