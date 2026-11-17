@@ -191,6 +191,8 @@ def main() -> None:
             + " approved files (need " + str(args.min_documents)
             + "); website unchanged. Confirm TroopWebHost's public markup/session path."
         )
+    known = {link.get("href") for link in BeautifulSoup(re.sub(r"\\s*" + re.escape(START) + r".*?" + re.escape(END) + r"\\s*", "", FORM_FILE.read_text(encoding="utf-8"), flags=re.S), "html.parser").select("li.doc-item a[href]")}
+    print("Additional anonymous public files: " + repr([f.title for f in documents if f.url not in known]))
     count, changed = sync(documents)
     print(str(len(documents)) + " public troop-hosted files found; " + str(count)
           + " additional files indexed; website " + ("updated" if changed else "unchanged") + ".")
