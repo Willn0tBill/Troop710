@@ -2,6 +2,11 @@ name: Sync TroopWebHost public documents
 
 on:
   # Runs only after this workflow is reviewed and merged into main.
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/sync-public-documents.yml'
+      - 'scripts/sync_twh_public.py'
   schedule:
     - cron: '23 */6 * * *'
   workflow_dispatch:
