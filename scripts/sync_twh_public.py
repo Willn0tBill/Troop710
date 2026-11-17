@@ -9,7 +9,7 @@ from __future__ import annotations
 import argparse
 from dataclasses import dataclass
 from datetime import date
-from html import escape
+from html import escape, unescape
 import json
 from pathlib import Path
 import re
@@ -23,6 +23,7 @@ PUBLIC_FORMS = "https://www.troopwebhost.org/bsaShowTroopForms.aspx?Menu_Item_ID
 BLOB_PREFIX = "https://troopwebhost.blob.core.windows.net/troop710haciendaheights/"
 FORM_FILE = ROOT / "forms.html"
 SEARCH_FILE = ROOT / "search-index.json"
+STATE_FILE = ROOT / "troopwebhost-public-state.json"
 START = "<!-- BEGIN TWH PUBLIC UPLOADS -->"
 END = "<!-- END TWH PUBLIC UPLOADS -->"
 ALLOWED_EXTENSIONS = {".pdf", ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx", ".txt", ".jpg", ".jpeg", ".png"}
@@ -105,76 +106,225 @@ def write_if_changed(path: Path, content: str) -> bool:
     return True
 
 
-def sync(source: list[PublicFile]) -> tuple[int, bool]:
-    html = FORM_FILE.read_text(encoding="utf-8")
-    # Always regenerate just our own area. Never touch the 48 curated baseline links.
-    html = re.sub(r"\s*" + re.escape(START) + r".*?" + re.escape(END) + r"\s*", "", html, flags=re.S)
-    base_soup = BeautifulSoup(html, "html.parser")
-    existing = {
-        link.get("href")
-        for link in base_soup.select("li.doc-item a[href]")
-    }
-    newly_published = [file for file in source if file.url not in existing]
-    print("Additional anonymous public files: " + repr([file.title for file in newly_published]))
-    if len(newly_published) > 100:
-        raise ValueError("Over 100 new documents: refusing large unreviewed public update")
+def _render_upload(file: PublicFile) -> str:
+    label = Path(unquote(urlsplit(file.url).path)).suffix.lstrip(".").upper()
+    return (
+        '<li class="doc-item"><a href="' + escape(file.url, quote=True)
+        + '" target="_blank" rel="noopener noreferrer"><span class="file-icon">'
+        + escape(label) + "</span><span>" + escape(file.title)
+        + '</span><span aria-hidden="true">↗</span></a></li>'
+    )
 
-    block = ""
-    if newly_published:
-        entries = []
-        for file in newly_published:
-            label = Path(urlsplit(file.url).path).suffix.lstrip(".").upper()
-            entries.append(
-                '<li class="doc-item"><a href="' + escape(file.url, quote=True)
-                + '" target="_blank" rel="noopener noreferrer"><span class="file-icon">'
-                + escape(label) + "</span><span>" + escape(file.title)
-                + '</span><span aria-hidden="true">↗</span></a></li>'
-            )
-        block = (
-            "\n" + START + '\n<details data-reveal class="doc-group"><summary><span>'
-            + "Latest public uploads <small>" + str(len(entries))
-            + ' documents</small></span></summary><ul class="doc-items">'
-            + "".join(entries) + "</ul></details>\n" + END + "\n"
+
+def _read_state() -> dict:
+    if not STATE_FILE.exists():
+        return {"version": 1, "known": {}, "missing": {}}
+    state = json.loads(STATE_FILE.read_text(encoding="utf-8"))
+    if state.get("version") != 1 or not isinstance(state.get("known"), dict) or not isinstance(state.get("missing"), dict):
+        raise ValueError("Document sync state is invalid; refusing to publish")
+    if any(not approved_url(u) for u in state["known"]):
+        raise ValueError("Document sync state has unapproved URLs")
+    return state
+
+
+def _document_links(html: str) -> dict[str, str]:
+    soup = BeautifulSoup(html, "html.parser")
+    result: dict[str, str] = {}
+    for item in soup.select("li.doc-item"):
+        link = item.select_one("a[href]")
+        if link is not None:
+            url = unescape(link.get("href", ""))
+            label = link.select_one("span:nth-child(2)")
+            result[url] = label.get_text(" ", strip=True) if label else link.get_text(" ", strip=True)
+    return result
+
+
+def _update_legacy(
+    match: re.Match[str],
+    active: dict[str, PublicFile],
+    missing: dict[str, int],
+    previous: dict[str, str],
+) -> str:
+    """Keep curated categories; reconcile only the TroopWebHost-managed entries."""
+    block = match.group(0)
+    url_match = re.search(r'<a href="([^"]+)"', block)
+    if url_match is None:
+        return block
+    url = unescape(url_match.group(1))
+    if not url.startswith(BLOB_PREFIX):
+        return block  # Keep external Scouting America references unchanged.
+    if url not in active:
+        return ""  # No longer in the public listing: unpublish immediately.
+    # Avoid rewriting hand-edited historical display names on the initial bootstrap.
+    # On later runs an actual TroopWebHost title change propagates to the old category.
+    if url not in previous or previous[url] == active[url].title:
+        return block
+    return re.sub(
+        r'(<span class="file-icon">[^<]*</span><span>)[\s\S]*?(</span>)',
+        lambda m: m.group(1) + escape(active[url].title) + m.group(2),
+        block, count=1,
+    )
+
+
+def _update_counts(html: str) -> tuple[str, int]:
+    """Recompute each folder count, page totals, and responsive search counter."""
+    def update_group(match: re.Match[str]) -> str:
+        block = match.group(0)
+        count = len(re.findall(r'<li class="doc-item">', block))
+        return re.sub(
+            r'(<summary><span>[^<]+<small>)\d+( documents?</small>)',
+            lambda m: m.group(1) + str(count) + m.group(2),
+            block, count=1,
         )
-    anchor = '</details></section><section class="banner-cta"'
-    if anchor not in html:
-        raise ValueError("Forms page layout changed; refusing to modify")
-    html = html.replace(anchor, "</details>" + block + '</section><section class="banner-cta"', 1)
-    count = len(base_soup.select("li.doc-item")) + len(newly_published)
-    if count < 40:
-        raise ValueError("Rendered library unexpectedly small")
-    html, changed = re.subn(
+    html = re.sub(r'<details\b[^>]*class="doc-group"[^>]*>[\s\S]*?</details>',
+                  update_group, html)
+    soup = BeautifulSoup(html, "html.parser")
+    count = len(soup.select("li.doc-item"))
+    group_count = sum(bool(group.select("li.doc-item")) for group in soup.select("details.doc-group"))
+    if count < 35:
+        raise ValueError("Rendered public library unexpectedly small; refusing to publish")
+    html, replaced = re.subn(
         r'(<div class="stat-strip" data-reveal><div><strong>)\d+(</strong>)',
-        lambda match: match.group(1) + str(count) + match.group(2),
+        lambda m: m.group(1) + str(count) + m.group(2),
         html, count=1,
     )
-    if changed != 1:
-        raise ValueError("Missing public document counter")
-    html = re.sub(
+    if replaced != 1:
+        raise ValueError("Public document statistic missing; refusing to publish")
+    html, replaced = re.subn(
         r'(<span class="result-count" id="doc-count" role="status" aria-live="polite">)\d+',
-        lambda match: match.group(1) + str(count), html, count=1
+        lambda m: m.group(1) + str(count),
+        html, count=1,
     )
+    if replaced != 1:
+        raise ValueError("Document search counter missing; refusing to publish")
     html = re.sub(
         r'\d+ organized categories · (?:Original PDF links retained|Original file links retained)',
-        str(9 + bool(newly_published)) + ' organized categories · Original file links retained',
+        str(group_count) + ' organized categories · Original file links retained',
         html, count=1,
     )
+    return html, count
 
+
+def sync(source: list[PublicFile]) -> tuple[int, int, bool]:
+    """Reconcile the public directory, unpublishing absent links promptly.
+
+    Source is strictly the *anonymous* page. A missing link disappears on
+    its first healthy absence; its metadata is retained for one more check
+    so transient absences can be recognized. Sudden large drops fail closed.
+    """
+    state = _read_state()
+    previous: dict[str, str] = dict(state["known"])
+    source_by_url = {file.url: file for file in source}
+    source_urls = set(source_by_url)
+    if len(source_by_url) != len(source):
+        raise ValueError("Ambiguous duplicate public document URLs")
+    if any(approved_url(file.url) != file.url for file in source):
+        raise ValueError("Public directory includes an unapproved URL")
+    if len(source_by_url) < 35:
+        raise ValueError("Public source is incomplete; no changes published")
+
+    # Guard against partial pages. A troop leader can review a deliberately
+    # large bulk removal instead of the website silently removing many links.
+    prior_urls = set(previous)
+    missing_from_source = prior_urls - source_urls
+    allowed_missing = max(5, (len(prior_urls) + 9) // 10)
+    if len(missing_from_source) > allowed_missing:
+        raise ValueError(
+            f"Source lost {len(missing_from_source)} of {len(prior_urls)} tracked files; "
+            "manual review required before mass removal"
+        )
+
+    original_html = FORM_FILE.read_text(encoding="utf-8")
+    original_links = _document_links(original_html)
+    legacy_html = re.sub(
+        r"\s*" + re.escape(START) + r"[\s\S]*?" + re.escape(END) + r"\s*",
+        "", original_html,
+    )
+    if '</details></section><section class="banner-cta"' not in legacy_html:
+        raise ValueError("Forms page layout changed; refusing to publish")
+
+    previous_missing: dict[str, int] = dict(state["missing"])
+    missing: dict[str, int] = {}
+    relevant_urls = {u for u in original_links if u.startswith(BLOB_PREFIX)} | prior_urls
+    for url in sorted(relevant_urls - source_urls):
+        missing[url] = min(2, previous_missing.get(url, 0) + 1)
+    keep_pending = {u for u, n in missing.items() if n < 2}
+    active = source_by_url  # Do not expose URLs absent from the public listing.
+
+    # Unpublish missing TWH items immediately; retain metadata separately for
+    # a second check. Replace renamed labels; leave other hosts untouched.
+    legacy_html = re.sub(
+        r'<li class="doc-item">[\s\S]*?</li>',
+        lambda m: _update_legacy(m, active, missing, previous),
+        legacy_html,
+    )
+    base_links = _document_links(legacy_html)
+    added = [file for url, file in active.items() if url not in base_links]
+    added.sort(key=lambda file: (file.title.casefold(), file.url))
+    if len(added) > 100:
+        raise ValueError("Over 100 ungrouped public uploads; manual review required")
+
+    block = ""
+    if added:
+        block = (
+            "\n" + START + '\n<details data-reveal class="doc-group"><summary><span>'
+            + 'Latest public uploads <small>' + str(len(added))
+            + ' documents</small></span></summary><ul class="doc-items">'
+            + "".join(_render_upload(file) for file in added)
+            + "</ul></details>\n" + END + "\n"
+        )
+    html = legacy_html.replace(
+        '</details></section><section class="banner-cta"',
+        '</details>' + block + '</section><section class="banner-cta"',
+        1,
+    )
+    html, total = _update_counts(html)
+
+    # Every document search entry is reconciled to links actually rendered.
+    # Preserve the hand-authored keywords/categories for surviving entries.
     index = json.loads(SEARCH_FILE.read_text(encoding="utf-8"))
-    items = [x for x in index["items"] if x.get("source") != "troopwebhost-sync"]
-    for file in newly_published:
-        items.append({
-            "kind": "document", "title": file.title, "subtitle": "Forms & Documents · Latest public uploads",
-            "url": file.url, "keywords": "troop 710 public documents forms downloads",
-            "source": "troopwebhost-sync"
-        })
-    if items != index["items"]:
-        index["items"] = items
+    old_docs = {unescape(x.get("url", "")): x for x in index["items"] if x.get("kind") == "document"}
+    rendered = _document_links(html)
+    docs = []
+    for url, title in rendered.items():
+        original = old_docs.get(url, {})
+        entry = dict(original) if original else {
+            "kind": "document", "subtitle": "Forms & Documents · Latest public uploads",
+            "keywords": "troop 710 public documents forms downloads",
+            "source": "troopwebhost-sync",
+        }
+        entry["title"] = title
+        entry["url"] = url
+        docs.append(entry)
+    old_items = index["items"]
+    index["items"] = [item for item in old_items if item.get("kind") != "document"] + docs
+    if index["items"] != old_items:
         index["updated"] = date.today().isoformat()
     serialized = json.dumps(index, ensure_ascii=False, separators=(",", ":")) + "\n"
+
+    # Only active/pending URLs survive into tracking state.
+    next_state = {
+        "version": 1,
+        "known": {u: source_by_url[u].title if u in source_by_url else previous.get(u, original_links.get(u, ""))
+                  for u in sorted(source_urls | keep_pending)},
+        "missing": {u: n for u, n in sorted(missing.items()) if n < 2},
+    }
+    state_text = json.dumps(next_state, ensure_ascii=False, indent=2) + "\n"
+    removed = sum(
+        1 for u in original_links
+        if u.startswith(BLOB_PREFIX) and u not in rendered
+    )
     changed_html = write_if_changed(FORM_FILE, html)
     changed_index = write_if_changed(SEARCH_FILE, serialized)
-    return len(newly_published), changed_html or changed_index
+    changed_state = (not STATE_FILE.exists()) or (STATE_FILE.read_text(encoding="utf-8") != state_text)
+    if changed_state:
+        STATE_FILE.write_text(state_text, encoding="utf-8")
+    print(
+        f"Public documents: {len(source_urls)} authoritative, "
+        f"{len(added)} in latest uploads, {removed} removed from public site, "
+        f"{len(keep_pending)} pending source confirmation, {total} on website."
+    )
+    return len(added), removed, changed_html or changed_index or changed_state
 
 
 def main() -> None:
@@ -192,9 +342,10 @@ def main() -> None:
             + " approved files (need " + str(args.min_documents)
             + "); website unchanged. Confirm TroopWebHost's public markup/session path."
         )
-    count, changed = sync(documents)
-    print(str(len(documents)) + " public troop-hosted files found; " + str(count)
-          + " additional files indexed; website " + ("updated" if changed else "unchanged") + ".")
+    added, removed, changed = sync(documents)
+    print(str(len(documents)) + " public troop-hosted files found; " + str(added)
+          + " ungrouped files, " + str(removed) + " removed; website "
+          + ("updated" if changed else "unchanged") + ".")
 
 
 if __name__ == "__main__":
