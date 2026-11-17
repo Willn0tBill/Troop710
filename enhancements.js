@@ -112,7 +112,7 @@ function syncBookmarkButtons(){
 const categories=[
  ["all","All documents"],
  ["saved","★ Saved"],
- ["latest","Latest uploads"],
+ ["latest","Other public files"],
  ["general","General"],
  ["volunteer","Volunteer requirements"],
  ["adult","Adult registration"],
@@ -124,7 +124,7 @@ const categories=[
  ["district","District archive"]
 ];
 const folderPatterns=[
- ["latest",/latest public uploads/i],
+ ["latest",/latest public uploads|additional public files/i],
  ["general",/general documents/i],
  ["volunteer",/volunteer screening|ab 506/i],
  ["adult",/adult registration/i],

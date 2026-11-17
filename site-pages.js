@@ -35,6 +35,22 @@ if(search&&groups.length){
   const resultCount=document.getElementById("doc-count");
   const emptyMessage=document.getElementById("no-results");
   const expanded=groups.map(group=>group.open);
+  /* Keep a clear search action visible on touch devices and for keyboard users. */
+  const searchWrap=search.closest(".search-wrap");
+  const clearButton=document.createElement("button");
+  clearButton.type="button";
+  clearButton.className="t710-doc-clear";
+  clearButton.textContent="Clear";
+  clearButton.setAttribute("aria-label","Clear document search");
+  if(searchWrap)searchWrap.append(clearButton);
+  const syncClearButton=()=>{clearButton.hidden=search.value.length===0;};
+  clearButton.addEventListener("click",()=>{
+    search.value="";
+    search.dispatchEvent(new Event("input",{bubbles:true}));
+    search.focus();
+  });
+  search.addEventListener("input",syncClearButton);
+  syncClearButton();
   const total=groups.reduce((sum,g)=>sum+g.querySelectorAll(".doc-item").length,0);
   function filterDocuments(){
     const query=search.value.trim().toLocaleLowerCase();
@@ -70,7 +86,9 @@ function savePref(key,value){
   try{localStorage.setItem(key,value)}catch(_){}
 }
 let theme=getPref(themeKey)==="dark"?"dark":"light";
-let enabled=getPref(motionKey)!=="off";
+const motionPref=getPref(motionKey);
+const reducedMotion=window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
+let enabled=motionPref==="on"||(motionPref!=="off"&&!reducedMotion);
 
 const preferences=document.querySelector("[data-preferences]");
 const preferencesTrigger=preferences?.querySelector("[data-preferences-trigger]");

@@ -245,3 +245,59 @@ html[data-theme="dark"] .t710-copy-doc{color:#c8ddc1}
 @media(prefers-reduced-motion:reduce){
  html:not(.motion-enabled) .t710-copy-doc{transition:none!important}
 }
+
+
+/* November 2026 polish: clearer forms workflow and more resilient small screens. */
+.t710-doc-clear {
+  flex:none;
+  border:1px solid var(--v2-line);
+  border-radius:8px;
+  background:var(--v2-bg);
+  color:var(--v2-ink);
+  padding:7px 10px;
+  min-height:35px;
+  font:700 12px/1 "DM Sans",Arial,sans-serif;
+  transition:background .16s,border-color .16s;
+}
+.t710-doc-clear[hidden] {display:none!important}
+.t710-doc-clear:hover {background:var(--v2-line)}
+.t710-doc-clear:focus-visible {outline:3px solid #8fb77a;outline-offset:3px}
+.t710-public-sync-note {
+  display:flex;
+  align-items:flex-start;
+  gap:11px;
+  margin-top:23px;
+  color:var(--v2-muted);
+  font:600 13px/1.6 "DM Sans",Arial,sans-serif;
+}
+.t710-public-sync-note::before {
+  content:"";
+  display:block;
+  flex:0 0 9px;
+  width:9px;
+  height:9px;
+  margin-top:6px;
+  border:2px solid #5b8f64;
+  border-radius:50%;
+  box-shadow:0 0 0 4px rgba(102,155,109,.10);
+}
+.t710-public-sync-note a {color:var(--v2-ink);font-weight:800;text-underline-offset:3px;text-decoration:underline}
+.t710-public-sync-note a:hover {text-decoration-thickness:2px}
+#your-path,#join,#scouting-in-motion,#experience,#documents-title,
+#packing,#readiness,#find {scroll-margin-top:100px}
+@media(max-width:1020px) {
+  .site-header .nav {
+    max-height:calc(100vh - 78px);
+    max-height:calc(100dvh - 78px);
+    overflow-y:auto;
+    overscroll-behavior:contain;
+  }
+}
+@media(max-width:580px) {
+  .search-wrap{width:100%;max-width:none;min-width:0}
+  .search-wrap input{padding:14px 0}
+  .t710-doc-clear{padding:7px 9px}
+  .t710-public-sync-note{font-size:12px}
+  #your-path,#join,#scouting-in-motion,#experience,#documents-title,
+  #packing,#readiness,#find {scroll-margin-top:83px}
+}

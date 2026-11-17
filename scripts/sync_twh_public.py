@@ -268,7 +268,7 @@ def sync(source: list[PublicFile]) -> tuple[int, int, bool]:
     if added:
         block = (
             "\n" + START + '\n<details data-reveal class="doc-group"><summary><span>'
-            + 'Latest public uploads <small>' + str(len(added))
+            + 'Additional public files <small>' + str(len(added))
             + ' documents</small></span></summary><ul class="doc-items">'
             + "".join(_render_upload(file) for file in added)
             + "</ul></details>\n" + END + "\n"
@@ -289,7 +289,7 @@ def sync(source: list[PublicFile]) -> tuple[int, int, bool]:
     for url, title in rendered.items():
         original = old_docs.get(url, {})
         entry = dict(original) if original else {
-            "kind": "document", "subtitle": "Forms & Documents · Latest public uploads",
+            "kind": "document", "subtitle": "Forms & Documents · Additional public files",
             "keywords": "troop 710 public documents forms downloads",
             "source": "troopwebhost-sync",
         }

@@ -5,6 +5,17 @@ A modern, mobile-friendly public information website for **Troop 710 of Hacienda
 **Official troop management portal:** https://www.troopwebhost.org/Troop710HaciendaHeights/Index.htm  
 **Live GitHub Pages website:** https://willn0tbill.github.io/Troop710/
 
+## Current document and accessibility behavior (November 2026)
+
+- Public files are **stored on TroopWebHost** and linked from this GitHub Pages website. GitHub Actions checks the anonymous public forms directory approximately every six hours.
+- New public links and titles synchronize automatically; public links removed or restricted in TroopWebHost disappear from the public index after a healthy sync. No member-only files are fetched or mirrored.
+- The dynamically maintained **Additional public files** group contains entries outside curated categories. These entries are not necessarily recent uploads.
+- The Documents page has a Clear Search action and category filters. Search, saved bookmarks, and original download links remain available.
+- Mobile navigation scrolls on shorter screens. Appearance settings allow manual animations on/off; without an explicit setting, the site honors the device's reduced-motion preference.
+- Automated headless browser tests cover desktop/mobile navigation, forms, site search and motion preferences in `.github/workflows/site-smoke.yml`.
+
+See [document sync operation and privacy notes](docs/troopwebhost-public-doc-sync.md) for security boundaries and vendor API limitations.
+
 ## Website structure
 
 | File | Page | Purpose |
