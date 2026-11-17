@@ -25,11 +25,11 @@ See vendor documentation: https://www.troopwebhost.org/help.aspx?ID=97 .
 - **File contents replaced at the same URL:** the website continues to use
   the same URL and therefore serves the updated file automatically.
 - **A file replaced with a new URL:** the new link appears on the first sync.
-  The old link is removed after two consecutive healthy public snapshots
-  confirm it is absent from TroopWebHost.
-- **Public file deleted or made private:** the public link is removed after
-  two consecutive healthy public snapshots. (Removing its index entry does
-  **not** revoke access to an old Azure URL.)
+  The old link is removed after the first healthy public snapshot that no
+  longer lists it; the internal inventory tracks its disappearance over two checks.
+- **Public file deleted or made private:** the public link is removed on the first healthy snapshot that no longer
+  lists it. (Removing its index entry does **not** revoke access to an old
+  Azure URL.)
 - **Externally hosted official forms:** curated third-party links remain
   untouched by this sync.
 
@@ -48,8 +48,10 @@ possible. New links that were not in the curated categories appear in
   depth, not a substitute for correct document access permissions.
 - Require at least 35 public troop-hosted files; reject an abrupt drop of
   more than 5 or about 10% from the previous tracked snapshot.
-- Require **two consecutive successful public checks** for removals. Keep
-  pending items visible until the second check. Failed reads never count.
+- Unpublish absent files on the **first healthy public read** so changing
+  a document to private does not leave an old link on the website. Keep
+  metadata for a second check to distinguish a transient absence from a
+  permanent removal. Failed reads never count.
 - Track the current public inventory in
   \`troopwebhost-public-state.json\` to make synchronization deterministic.
 - Never change or delete the original TroopWebHost file itself.
