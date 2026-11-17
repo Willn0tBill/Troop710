@@ -305,7 +305,7 @@ def sync(source: list[PublicFile]) -> tuple[int, int, bool]:
     # Only active/pending URLs survive into tracking state.
     next_state = {
         "version": 1,
-        "known": {u: source_by_url[u].title if u in source_by_url else active[u].title
+        "known": {u: source_by_url[u].title if u in source_by_url else previous.get(u, original_links.get(u, ""))
                   for u in sorted(source_urls | keep_pending)},
         "missing": {u: n for u, n in sorted(missing.items()) if n < 2},
     }
