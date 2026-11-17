@@ -19,7 +19,7 @@ from bs4 import BeautifulSoup
 
 ROOT = Path(__file__).resolve().parents[1]
 PORTAL = "https://www.troopwebhost.org/Troop710HaciendaHeights/Index.htm"
-PUBLIC_FORMS = "https://www.troopwebhost.org/Troop710HaciendaHeights/bsaShowTroopForms.aspx?Menu_Item_ID=45870&Stack=1"
+PUBLIC_FORMS = "https://www.troopwebhost.org/bsaShowTroopForms.aspx?Menu_Item_ID=45870&Stack=1"
 BLOB_PREFIX = "https://troopwebhost.blob.core.windows.net/troop710haciendaheights/"
 FORM_FILE = ROOT / "forms.html"
 SEARCH_FILE = ROOT / "search-index.json"
@@ -77,23 +77,22 @@ async def fetch_anonymous_directory() -> str:
         try:
             await page.goto(PORTAL, wait_until="domcontentloaded", timeout=60000)
             await page.wait_for_timeout(2500)  # TroopWebHost enters the ASP.NET app via redirect/POST.
-            print("TroopWebHost landing: " + page.url + " | " + await page.title())
-            print("TroopWebHost landing frames: " + repr([(f.name, f.url) for f in page.frames]))
-            print("Landing iframe/form markup: " + repr((await page.content())[:600]))
-            links = page.locator("a").filter(has_text=re.compile(r"Forms\s*&\s*Documents", re.I))
+            app_frames = [f for f in page.frames if f is not page.main_frame]
+            if not app_frames:
+                raise RuntimeError("TroopWebHost did not load its public application frame")
+            frame = app_frames[-1]
+            print("Anonymous TroopWebHost application: " + frame.url)
+            links = frame.locator("a").filter(has_text=re.compile(r"Forms\s*&\s*Documents", re.I))
             if await links.count():
                 try:
                     await links.first.click(timeout=12000)
                 except Exception:
-                    await page.goto(PUBLIC_FORMS, wait_until="domcontentloaded", timeout=60000)
+                    await frame.goto(PUBLIC_FORMS, wait_until="domcontentloaded", timeout=60000)
             else:
-                await page.goto(PUBLIC_FORMS, wait_until="domcontentloaded", timeout=60000)
-            await page.wait_for_timeout(3500)
-            print("TroopWebHost directory: " + page.url + " | " + await page.title())
-            labels = [x.strip()[:70] for x in await page.locator("a").all_text_contents() if x.strip()]
-            print("Anonymous public link labels (first 25): " + repr(labels[:25]))
-            html = await page.content()
-            print("Public HTML length: " + str(len(html)) + " | anchors: " + str(await page.locator("a[href]").count()))
+                await frame.goto(PUBLIC_FORMS, wait_until="domcontentloaded", timeout=60000)
+            await page.wait_for_timeout(2500)
+            print("Public directory frame: " + frame.url + " | " + await frame.title())
+            html = await frame.content()
             return html
         finally:
             await browser.close()
