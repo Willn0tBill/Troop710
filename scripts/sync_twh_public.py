@@ -77,6 +77,7 @@ async def fetch_anonymous_directory() -> str:
         try:
             await page.goto(PORTAL, wait_until="domcontentloaded", timeout=60000)
             await page.wait_for_timeout(2500)  # TroopWebHost enters the ASP.NET app via redirect/POST.
+            print("TroopWebHost landing: " + page.url + " | " + await page.title())
             links = page.locator("a").filter(has_text=re.compile(r"Forms\s*&\s*Documents", re.I))
             if await links.count():
                 try:
@@ -86,7 +87,12 @@ async def fetch_anonymous_directory() -> str:
             else:
                 await page.goto(PUBLIC_FORMS, wait_until="domcontentloaded", timeout=60000)
             await page.wait_for_timeout(3500)
-            return await page.content()
+            print("TroopWebHost directory: " + page.url + " | " + await page.title())
+            labels = [x.strip()[:70] for x in await page.locator("a").all_text_contents() if x.strip()]
+            print("Anonymous public link labels (first 25): " + repr(labels[:25]))
+            html = await page.content()
+            print("Public HTML length: " + str(len(html)) + " | anchors: " + str(await page.locator("a[href]").count()))
+            return html
         finally:
             await browser.close()
 
