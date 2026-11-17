@@ -320,10 +320,9 @@ def sync(source: list[PublicFile]) -> tuple[int, int, bool]:
     )
     changed_html = write_if_changed(FORM_FILE, html)
     changed_index = write_if_changed(SEARCH_FILE, serialized)
-    changed_state = not STATE_FILE.exists() or write_if_changed(STATE_FILE, state_text)
-    if not changed_state and STATE_FILE.exists():
-        # Existing file was already equal; no write or commit required.
-        pass
+    changed_state = (not STATE_FILE.exists()) or (STATE_FILE.read_text(encoding="utf-8") != state_text)
+    if changed_state:
+        STATE_FILE.write_text(state_text, encoding="utf-8")
     print(
         f"Public documents: {len(source_urls)} authoritative, "
         f"{len(added)} in latest uploads, {removed} confirmed removed, "
