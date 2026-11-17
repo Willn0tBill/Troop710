@@ -154,7 +154,7 @@ def _update_legacy(
     if not url.startswith(BLOB_PREFIX):
         return block  # Keep external Scouting America references unchanged.
     if url not in active:
-        return "" if missing.get(url, 0) >= 2 else block
+        return ""  # No longer in the public listing: unpublish immediately.
     # Avoid rewriting hand-edited historical display names on the initial bootstrap.
     # On later runs an actual TroopWebHost title change propagates to the old category.
     if url not in previous or previous[url] == active[url].title:
@@ -206,11 +206,11 @@ def _update_counts(html: str) -> tuple[str, int]:
 
 
 def sync(source: list[PublicFile]) -> tuple[int, int, bool]:
-    """Reconcile the public directory, with two-crawl deletion confirmation.
+    """Reconcile the public directory, unpublishing absent links promptly.
 
-    Source is strictly the *anonymous* page. A missing file stays visible until
-    two consecutive healthy public crawls show it missing. Any anomalously large
-    drop aborts before writing, so a page-rendering failure cannot clear the list.
+    Source is strictly the *anonymous* page. A missing link disappears on
+    its first healthy absence; its metadata is retained for one more check
+    so transient absences can be recognized. Sudden large drops fail closed.
     """
     state = _read_state()
     previous: dict[str, str] = dict(state["known"])
@@ -249,14 +249,10 @@ def sync(source: list[PublicFile]) -> tuple[int, int, bool]:
     for url in sorted(relevant_urls - source_urls):
         missing[url] = min(2, previous_missing.get(url, 0) + 1)
     keep_pending = {u for u, n in missing.items() if n < 2}
-    retained = {
-        url: PublicFile(previous.get(url, original_links.get(url, "")), url)
-        for url in keep_pending
-    }
-    active = {**retained, **source_by_url}
+    active = source_by_url  # Do not expose URLs absent from the public listing.
 
-    # Delete stale curated TWH items after confirmation and replace renamed
-    # labels when the official public listing changes. Other hosts are untouched.
+    # Unpublish missing TWH items immediately; retain metadata separately for
+    # a second check. Replace renamed labels; leave other hosts untouched.
     legacy_html = re.sub(
         r'<li class="doc-item">[\s\S]*?</li>',
         lambda m: _update_legacy(m, active, missing, previous),
@@ -325,8 +321,8 @@ def sync(source: list[PublicFile]) -> tuple[int, int, bool]:
         STATE_FILE.write_text(state_text, encoding="utf-8")
     print(
         f"Public documents: {len(source_urls)} authoritative, "
-        f"{len(added)} in latest uploads, {removed} confirmed removed, "
-        f"{len(keep_pending)} pending confirmation, {total} on website."
+        f"{len(added)} in latest uploads, {removed} removed from public site, "
+        f"{len(keep_pending)} pending source confirmation, {total} on website."
     )
     return len(added), removed, changed_html or changed_index or changed_state
 
