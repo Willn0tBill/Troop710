@@ -78,6 +78,8 @@ async def fetch_anonymous_directory() -> str:
             await page.goto(PORTAL, wait_until="domcontentloaded", timeout=60000)
             await page.wait_for_timeout(2500)  # TroopWebHost enters the ASP.NET app via redirect/POST.
             print("TroopWebHost landing: " + page.url + " | " + await page.title())
+            print("TroopWebHost landing frames: " + repr([(f.name, f.url) for f in page.frames]))
+            print("Landing iframe/form markup: " + repr((await page.content())[:600]))
             links = page.locator("a").filter(has_text=re.compile(r"Forms\s*&\s*Documents", re.I))
             if await links.count():
                 try:
