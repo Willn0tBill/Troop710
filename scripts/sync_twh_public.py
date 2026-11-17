@@ -295,6 +295,8 @@ def sync(source: list[PublicFile]) -> tuple[int, int, bool]:
         }
         entry["title"] = title
         entry["url"] = url
+        if entry.get("source") == "troopwebhost-sync":
+            entry["subtitle"] = "Forms & Documents · Additional public files"
         docs.append(entry)
     old_items = index["items"]
     index["items"] = [item for item in old_items if item.get("kind") != "document"] + docs
