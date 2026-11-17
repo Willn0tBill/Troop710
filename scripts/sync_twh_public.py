@@ -101,7 +101,7 @@ def write_if_changed(path: Path, content: str) -> bool:
 def sync(source: list[PublicFile]) -> tuple[int, bool]:
     html = FORM_FILE.read_text(encoding="utf-8")
     # Always regenerate just our own area. Never touch the 48 curated baseline links.
-    html = re.sub(re.escape(START) + r".*?" + re.escape(END), "", html, flags=re.S)
+    html = re.sub(r"\s*" + re.escape(START) + r".*?" + re.escape(END) + r"\s*", "", html, flags=re.S)
     base_soup = BeautifulSoup(html, "html.parser")
     existing = {
         link.get("href")
