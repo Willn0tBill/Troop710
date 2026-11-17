@@ -1,7 +1,7 @@
 name: Sync TroopWebHost public documents
 
 on:
-  # Runs only after this workflow is reviewed and merged into main.
+  # Check new public uploads and reconcile replacements/deletions every six hours.
   push:
     branches: [main]
     paths:
@@ -69,10 +69,10 @@ jobs:
         run: python scripts/sync_twh_public.py
       - name: Publish updates only when links changed
         run: |
-          if ! git diff --quiet -- forms.html search-index.json; then
+          if ! git diff --quiet -- forms.html search-index.json || [[ -n "$(git ls-files --others --exclude-standard -- troopwebhost-public-state.json)" ]]; then
             git config user.name "troop710-doc-sync[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add forms.html search-index.json
+            git add forms.html search-index.json troopwebhost-public-state.json
             git commit -m "Sync public TroopWebHost document links"
             git push
           else
