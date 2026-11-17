@@ -82,17 +82,23 @@ class PublicDocsTests(unittest.TestCase):
         self.assertTrue(self.state.exists())
         self.assertEqual(sync.sync(source), (1, 0, False))
 
-    def test_removed_file_needs_two_healthy_public_reads(self):
+    def test_removed_file_unpublished_immediately_with_two_scan_state(self):
         sync.sync(self.files())
         current = self.files(range(39))
-        _, removed, changed = sync.sync(current)
-        self.assertEqual(removed, 0)
-        self.assertTrue(changed)
-        self.assertIn(self.url(39), self.rendered_urls())
         _, removed, changed = sync.sync(current)
         self.assertEqual(removed, 1)
         self.assertTrue(changed)
         self.assertNotIn(self.url(39), self.rendered_urls())
+        self.assertEqual(
+            json.loads(self.state.read_text(encoding="utf-8"))["missing"][self.url(39)], 1
+        )
+        _, removed, changed = sync.sync(current)
+        self.assertEqual(removed, 0)
+        self.assertTrue(changed)  # State is cleared on second successful absence.
+        self.assertNotIn(self.url(39), self.rendered_urls())
+        self.assertNotIn(
+            self.url(39), json.loads(self.state.read_text(encoding="utf-8"))["known"]
+        )
         self.assertIn("https://www.scouting.org/test.pdf", self.rendered_urls())
         self.assertNotIn(self.url(39), [
             x["url"] for x in json.loads(self.search.read_text(encoding="utf-8"))["items"]
@@ -103,7 +109,7 @@ class PublicDocsTests(unittest.TestCase):
         sync.sync(self.files())
         replacement = self.files(range(1, 40)) + [sync.PublicFile("Updated document", self.url(99))]
         sync.sync(replacement)
-        self.assertIn(self.url(0), self.rendered_urls())
+        self.assertNotIn(self.url(0), self.rendered_urls())
         self.assertIn(self.url(99), self.rendered_urls())
         sync.sync(replacement)
         self.assertNotIn(self.url(0), self.rendered_urls())
