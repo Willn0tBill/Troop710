@@ -80,6 +80,16 @@ class PublicDocsTests(unittest.TestCase):
         index = json.loads(self.search.read_text(encoding="utf-8"))
         self.assertEqual(len([x for x in index["items"] if x["kind"] == "document"]), 42)
         self.assertTrue(self.state.exists())
+        # A previous deploy used a misleading "Latest uploads" label.
+        # A later healthy sync must repair it without duplicating the file.
+        extra = next(x for x in index["items"] if x.get("source") == "troopwebhost-sync")
+        extra["subtitle"] = "Forms & Documents · Latest public uploads"
+        self.search.write_text(json.dumps(index), encoding="utf-8")
+        self.assertEqual(sync.sync(source), (1, 0, True))
+        repaired = json.loads(self.search.read_text(encoding="utf-8"))
+        self.assertIn("Additional public files", next(
+            x for x in repaired["items"] if x.get("source") == "troopwebhost-sync"
+        )["subtitle"])
         self.assertEqual(sync.sync(source), (1, 0, False))
 
     def test_removed_file_unpublished_immediately_with_two_scan_state(self):
